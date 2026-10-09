@@ -1,0 +1,778 @@
+#,Syscall,Category,Key Details,Arguments,Return Value
+1,execve,Process Control,"path=""/usr/bin/ls"", success","""/usr/bin/ls"", [""ls"", ""-la""], 0x7ffe878bad38 /* 21 vars */",0
+2,brk,Memory Management,,NULL,0x5ee774b09000
+3,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x71ad623e3000","NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x71ad623e3000
+4,access,File I/O / File System,,"""/etc/ld.so.preload"", R_OK",-1 ENOENT (No such file or directory)
+5,openat,File I/O / File System,"path=""/etc/ld.so.cache"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/etc/ld.so.cache"", O_RDONLY|O_CLOEXEC",3
+6,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=21099, ...}",0
+7,mmap,Memory Management,"len=21099B, prot=PROT_READ, addr=0x71ad623dd000","NULL, 21099, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623dd000
+8,close,File I/O / File System,"fd=3, success",3,0
+9,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libselinux.so.1"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libselinux.so.1"", O_RDONLY|O_CLOEXEC",3
+10,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0""..., 832",832
+11,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=174472, ...}",0
+12,mmap,Memory Management,"len=181960B, prot=PROT_READ, addr=0x71ad623b0000","NULL, 181960, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x71ad623b0000
+13,mmap,Memory Management,"len=118784B, prot=PROT_READ|PROT_EXEC, addr=0x71ad623b6000","0x71ad623b6000, 118784, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x6000",0x71ad623b6000
+14,mmap,Memory Management,"len=24576B, prot=PROT_READ, addr=0x71ad623d3000","0x71ad623d3000, 24576, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x23000",0x71ad623d3000
+15,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x71ad623d9000","0x71ad623d9000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x29000",0x71ad623d9000
+16,mmap,Memory Management,"len=5832B, prot=PROT_READ|PROT_WRITE, addr=0x71ad623db000","0x71ad623db000, 5832, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0",0x71ad623db000
+17,close,File I/O / File System,"fd=3, success",3,0
+18,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libc.so.6"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libc.so.6"", O_RDONLY|O_CLOEXEC",3
+19,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0""..., 832",832
+20,pread64,File I/O / File System,"fd=3, req=784B, read=784B","3, ""\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0""..., 784, 64",784
+21,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0755, st_size=2129424, ...}",0
+22,pread64,File I/O / File System,"fd=3, req=784B, read=784B","3, ""\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0""..., 784, 64",784
+23,mmap,Memory Management,"len=2174352B, prot=PROT_READ, addr=0x71ad62000000","NULL, 2174352, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x71ad62000000
+24,mmap,Memory Management,"len=1609728B, prot=PROT_READ|PROT_EXEC, addr=0x71ad62028000","0x71ad62028000, 1609728, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000",0x71ad62028000
+25,mmap,Memory Management,"len=323584B, prot=PROT_READ, addr=0x71ad621b1000","0x71ad621b1000, 323584, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b1000",0x71ad621b1000
+26,mmap,Memory Management,"len=24576B, prot=PROT_READ|PROT_WRITE, addr=0x71ad62200000","0x71ad62200000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1ff000",0x71ad62200000
+27,mmap,Memory Management,"len=52624B, prot=PROT_READ|PROT_WRITE, addr=0x71ad62206000","0x71ad62206000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0",0x71ad62206000
+28,close,File I/O / File System,"fd=3, success",3,0
+29,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libpcre2-8.so.0"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libpcre2-8.so.0"", O_RDONLY|O_CLOEXEC",3
+30,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0""..., 832",832
+31,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=625344, ...}",0
+32,mmap,Memory Management,"len=627472B, prot=PROT_READ, addr=0x71ad62316000","NULL, 627472, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x71ad62316000
+33,mmap,Memory Management,"len=450560B, prot=PROT_READ|PROT_EXEC, addr=0x71ad62318000","0x71ad62318000, 450560, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000",0x71ad62318000
+34,mmap,Memory Management,"len=163840B, prot=PROT_READ, addr=0x71ad62386000","0x71ad62386000, 163840, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x70000",0x71ad62386000
+35,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x71ad623ae000","0x71ad623ae000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x97000",0x71ad623ae000
+36,close,File I/O / File System,"fd=3, success",3,0
+37,mmap,Memory Management,"len=12288B, prot=PROT_READ|PROT_WRITE, addr=0x71ad62313000","NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x71ad62313000
+38,arch_prctl,Other,,"ARCH_SET_FS, 0x71ad62313800",0
+39,set_tid_address,Other,,0x71ad62313ad0,670
+40,set_robust_list,Other,,"0x71ad62313ae0, 24",0
+41,rseq,Other,,"0x71ad62314120, 0x20, 0, 0x53053053",0
+42,mprotect,Memory Management,,"0x71ad62200000, 16384, PROT_READ",0
+43,mprotect,Memory Management,,"0x71ad623ae000, 4096, PROT_READ",0
+44,mprotect,Memory Management,,"0x71ad623d9000, 4096, PROT_READ",0
+45,mprotect,Memory Management,,"0x5ee742f47000, 8192, PROT_READ",0
+46,mprotect,Memory Management,,"0x71ad62423000, 8192, PROT_READ",0
+47,prlimit64,Other,,"0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}",0
+48,munmap,Memory Management,"addr=0x71ad623dd000, len=21099B, success","0x71ad623dd000, 21099",0
+49,statfs,Other,,"""/sys/fs/selinux"", {f_type=SYSFS_MAGIC, f_bsize=4096, f_blocks=0, f_bfree=0, f_bavail=0, f_files=0, f_ffree=0, f_fsid={val=[0xed203ccb, 0x5ffebd42]}, f_namelen=255, f_frsize=4096, f_flags=ST_VALID|ST_NOSUID|ST_NODEV|ST_NOEXEC|ST_NOATIME}",0
+50,statfs,Other,,"""/selinux"", 0x7ffe21bdef80",-1 ENOENT (No such file or directory)
+51,getrandom,Other,,"""\xd8\xce\x21\xbe\xe3\x0e\x04\xea"", 8, GRND_NONBLOCK",8
+52,brk,Memory Management,,NULL,0x5ee774b09000
+53,brk,Memory Management,,0x5ee774b2a000,0x5ee774b2a000
+54,openat,File I/O / File System,"path=""/proc/filesystems"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/proc/filesystems"", O_RDONLY|O_CLOEXEC",3
+55,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0444, st_size=0, ...}",0
+56,read,File I/O / File System,"fd=3, req=1024B, read=442B","3, ""nodev\tsysfs\nnodev\ttmpfs\nnodev\tbd""..., 1024",442
+57,close,File I/O / File System,"fd=3, success",3,0
+58,openat,File I/O / File System,"path=""/proc/mounts"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/proc/mounts"", O_RDONLY|O_CLOEXEC",3
+59,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0444, st_size=0, ...}",0
+60,read,File I/O / File System,"fd=3, req=1024B, read=1024B","3, ""none /usr/lib/modules/6.18.33.2-""..., 1024",1024
+61,read,File I/O / File System,"fd=3, req=1024B, read=1024B","3, ""e 0 0\ndevpts /dev/pts devpts rw,""..., 1024",1024
+62,read,File I/O / File System,"fd=3, req=1024B, read=693B","3, "" 0 0\nhugetlbfs /dev/hugepages hu""..., 1024",693
+63,read,File I/O / File System,"fd=3, req=1024B, read=0B (EOF)","3, """", 1024",0
+64,close,File I/O / File System,"fd=3, success",3,0
+65,access,File I/O / File System,,"""/etc/selinux/config"", F_OK",-1 ENOENT (No such file or directory)
+66,openat,File I/O / File System,"path=""/usr/lib/locale/locale-archive"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/locale-archive"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+67,openat,File I/O / File System,"path=""/usr/share/locale/locale.alias"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/share/locale/locale.alias"", O_RDONLY|O_CLOEXEC",3
+68,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=2996, ...}",0
+69,read,File I/O / File System,"fd=3, req=4096B, read=2996B","3, ""# Locale name alias data base.\n#""..., 4096",2996
+70,read,File I/O / File System,"fd=3, req=4096B, read=0B (EOF)","3, """", 4096",0
+71,close,File I/O / File System,"fd=3, success",3,0
+72,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+73,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_IDENTIFICATION"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_IDENTIFICATION"", O_RDONLY|O_CLOEXEC",3
+74,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=258, ...}",0
+75,mmap,Memory Management,"len=258B, prot=PROT_READ, addr=0x71ad623e2000","NULL, 258, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623e2000
+76,close,File I/O / File System,"fd=3, success",3,0
+77,openat,File I/O / File System,"path=""/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache"", O_RDONLY|O_CLOEXEC",3
+78,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=27028, ...}",0
+79,mmap,Memory Management,"len=27028B, prot=PROT_READ, addr=0x71ad6230c000","NULL, 27028, PROT_READ, MAP_SHARED, 3, 0",0x71ad6230c000
+80,close,File I/O / File System,"fd=3, success",3,0
+81,futex,Other,,"0x71ad6220572c, FUTEX_WAKE_PRIVATE, 2147483647",0
+82,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_MEASUREMENT"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_MEASUREMENT"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+83,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_MEASUREMENT"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_MEASUREMENT"", O_RDONLY|O_CLOEXEC",3
+84,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=23, ...}",0
+85,mmap,Memory Management,"len=23B, prot=PROT_READ, addr=0x71ad623e1000","NULL, 23, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623e1000
+86,close,File I/O / File System,"fd=3, success",3,0
+87,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_TELEPHONE"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_TELEPHONE"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+88,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_TELEPHONE"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_TELEPHONE"", O_RDONLY|O_CLOEXEC",3
+89,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=47, ...}",0
+90,mmap,Memory Management,"len=47B, prot=PROT_READ, addr=0x71ad623e0000","NULL, 47, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623e0000
+91,close,File I/O / File System,"fd=3, success",3,0
+92,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_ADDRESS"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_ADDRESS"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+93,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_ADDRESS"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_ADDRESS"", O_RDONLY|O_CLOEXEC",3
+94,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=127, ...}",0
+95,mmap,Memory Management,"len=127B, prot=PROT_READ, addr=0x71ad623df000","NULL, 127, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623df000
+96,close,File I/O / File System,"fd=3, success",3,0
+97,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_NAME"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_NAME"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+98,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_NAME"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_NAME"", O_RDONLY|O_CLOEXEC",3
+99,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=62, ...}",0
+100,mmap,Memory Management,"len=62B, prot=PROT_READ, addr=0x71ad623de000","NULL, 62, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623de000
+101,close,File I/O / File System,"fd=3, success",3,0
+102,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_PAPER"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_PAPER"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+103,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_PAPER"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_PAPER"", O_RDONLY|O_CLOEXEC",3
+104,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=34, ...}",0
+105,mmap,Memory Management,"len=34B, prot=PROT_READ, addr=0x71ad623dd000","NULL, 34, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad623dd000
+106,close,File I/O / File System,"fd=3, success",3,0
+107,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_MESSAGES"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_MESSAGES"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+108,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_MESSAGES"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_MESSAGES"", O_RDONLY|O_CLOEXEC",3
+109,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0755, st_size=4096, ...}",0
+110,close,File I/O / File System,"fd=3, success",3,0
+111,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES"", O_RDONLY|O_CLOEXEC",3
+112,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=48, ...}",0
+113,mmap,Memory Management,"len=48B, prot=PROT_READ, addr=0x71ad6230b000","NULL, 48, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad6230b000
+114,close,File I/O / File System,"fd=3, success",3,0
+115,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_MONETARY"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_MONETARY"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+116,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_MONETARY"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_MONETARY"", O_RDONLY|O_CLOEXEC",3
+117,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=270, ...}",0
+118,mmap,Memory Management,"len=270B, prot=PROT_READ, addr=0x71ad6230a000","NULL, 270, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad6230a000
+119,close,File I/O / File System,"fd=3, success",3,0
+120,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_COLLATE"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_COLLATE"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+121,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_COLLATE"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_COLLATE"", O_RDONLY|O_CLOEXEC",3
+122,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=1406, ...}",0
+123,mmap,Memory Management,"len=1406B, prot=PROT_READ, addr=0x71ad62309000","NULL, 1406, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad62309000
+124,close,File I/O / File System,"fd=3, success",3,0
+125,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_TIME"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_TIME"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+126,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_TIME"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_TIME"", O_RDONLY|O_CLOEXEC",3
+127,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=3360, ...}",0
+128,mmap,Memory Management,"len=3360B, prot=PROT_READ, addr=0x71ad62308000","NULL, 3360, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad62308000
+129,close,File I/O / File System,"fd=3, success",3,0
+130,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_NUMERIC"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_NUMERIC"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+131,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_NUMERIC"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_NUMERIC"", O_RDONLY|O_CLOEXEC",3
+132,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=50, ...}",0
+133,mmap,Memory Management,"len=50B, prot=PROT_READ, addr=0x71ad62307000","NULL, 50, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad62307000
+134,close,File I/O / File System,"fd=3, success",3,0
+135,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_CTYPE"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_CTYPE"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+136,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_CTYPE"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_CTYPE"", O_RDONLY|O_CLOEXEC",3
+137,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=360460, ...}",0
+138,mmap,Memory Management,"len=360460B, prot=PROT_READ, addr=0x71ad622ae000","NULL, 360460, PROT_READ, MAP_PRIVATE, 3, 0",0x71ad622ae000
+139,close,File I/O / File System,"fd=3, success",3,0
+140,ioctl,Other,,"1, TCGETS, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}",0
+141,openat,File I/O / File System,"path=""."", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=3","AT_FDCWD, ""."", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",3
+142,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0777, st_size=4096, ...}",0
+143,getdents64,Other,,"3, 0x5ee774b12a90 /* 18 entries */, 32768",712
+144,statx,Other,,"AT_FDCWD, ""."", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFDIR|0777, stx_size=4096, ...}",0
+145,lgetxattr,Other,,"""."", ""security.selinux"", 0x5ee774b1aaa0, 255",-1 ENODATA (No data available)
+146,listxattr,Other,,"""."", """", 152",0
+147,socket,Network,"domain=AF_UNIX, type=SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, fd=4","AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0",4
+148,connect,Network,"fd=4, failed (ENOENT)","4, {sa_family=AF_UNIX, sun_path=""/var/run/nscd/socket""}, 110",-1 ENOENT (No such file or directory)
+149,close,File I/O / File System,"fd=4, success",4,0
+150,socket,Network,"domain=AF_UNIX, type=SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, fd=4","AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0",4
+151,connect,Network,"fd=4, failed (ENOENT)","4, {sa_family=AF_UNIX, sun_path=""/var/run/nscd/socket""}, 110",-1 ENOENT (No such file or directory)
+152,close,File I/O / File System,"fd=4, success",4,0
+153,newfstatat,File I/O / File System,,"AT_FDCWD, ""/etc/nsswitch.conf"", {st_mode=S_IFREG|0644, st_size=526, ...}, 0",0
+154,newfstatat,File I/O / File System,,"AT_FDCWD, ""/"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+155,openat,File I/O / File System,"path=""/etc/nsswitch.conf"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/etc/nsswitch.conf"", O_RDONLY|O_CLOEXEC",4
+156,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=526, ...}",0
+157,read,File I/O / File System,"fd=4, req=4096B, read=526B","4, ""# /etc/nsswitch.conf\n#\n# Example""..., 4096",526
+158,read,File I/O / File System,"fd=4, req=4096B, read=0B (EOF)","4, """", 4096",0
+159,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=526, ...}",0
+160,close,File I/O / File System,"fd=4, success",4,0
+161,openat,File I/O / File System,"path=""/etc/passwd"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/etc/passwd"", O_RDONLY|O_CLOEXEC",4
+162,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=1508, ...}",0
+163,lseek,File I/O / File System,,"4, 0, SEEK_SET",0
+164,read,File I/O / File System,"fd=4, req=4096B, read=1508B","4, ""root:x:0:0:root:/root:/bin/bash\n""..., 4096",1508
+165,close,File I/O / File System,"fd=4, success",4,0
+166,socket,Network,"domain=AF_UNIX, type=SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, fd=4","AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0",4
+167,connect,Network,"fd=4, failed (ENOENT)","4, {sa_family=AF_UNIX, sun_path=""/var/run/nscd/socket""}, 110",-1 ENOENT (No such file or directory)
+168,close,File I/O / File System,"fd=4, success",4,0
+169,socket,Network,"domain=AF_UNIX, type=SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, fd=4","AF_UNIX, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0",4
+170,connect,Network,"fd=4, failed (ENOENT)","4, {sa_family=AF_UNIX, sun_path=""/var/run/nscd/socket""}, 110",-1 ENOENT (No such file or directory)
+171,close,File I/O / File System,"fd=4, success",4,0
+172,newfstatat,File I/O / File System,,"AT_FDCWD, ""/etc/nsswitch.conf"", {st_mode=S_IFREG|0644, st_size=526, ...}, 0",0
+173,openat,File I/O / File System,"path=""/etc/group"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/etc/group"", O_RDONLY|O_CLOEXEC",4
+174,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=807, ...}",0
+175,lseek,File I/O / File System,,"4, 0, SEEK_SET",0
+176,read,File I/O / File System,"fd=4, req=4096B, read=807B","4, ""root:x:0:\ndaemon:x:1:\nbin:x:2:\ns""..., 4096",807
+177,close,File I/O / File System,"fd=4, success",4,0
+178,statx,Other,,"AT_FDCWD, "".."", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFDIR|0777, stx_size=4096, ...}",0
+179,lgetxattr,Other,,""".."", ""security.selinux"", 0x5ee774b1b180, 255",-1 ENODATA (No data available)
+180,listxattr,Other,,""".."", """", 152",0
+181,statx,Other,,"AT_FDCWD, "".vscode"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFDIR|0777, stx_size=4096, ...}",0
+182,lgetxattr,Other,,""".vscode"", ""security.selinux"", 0x5ee774b1b2b0, 255",-1 ENODATA (No data available)
+183,listxattr,Other,,""".vscode"", """", 152",0
+184,statx,Other,,"AT_FDCWD, ""app_launch_guide.md"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=2354, ...}",0
+185,lgetxattr,Other,,"""app_launch_guide.md"", ""security.selinux"", 0x5ee774b1b3e0, 255",-1 ENODATA (No data available)
+186,listxattr,Other,,"""app_launch_guide.md"", """", 152",0
+187,statx,Other,,"AT_FDCWD, ""detail_parser.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=11643, ...}",0
+188,lgetxattr,Other,,"""detail_parser.py"", ""security.selinux"", 0x5ee774b1b510, 255",-1 ENODATA (No data available)
+189,listxattr,Other,,"""detail_parser.py"", """", 152",0
+190,statx,Other,,"AT_FDCWD, ""double_session_syscall_report_20261009_102053.csv"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=18225, ...}",0
+191,lgetxattr,Other,,"""double_session_syscall_report_20261009_102053.csv"", ""security.selinux"", 0x5ee774b1b640, 255",-1 ENODATA (No data available)
+192,listxattr,Other,,"""double_session_syscall_report_20261009_102053.csv"", """", 152",0
+193,statx,Other,,"AT_FDCWD, ""failure_analysis.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=7193, ...}",0
+194,lgetxattr,Other,,"""failure_analysis.py"", ""security.selinux"", 0x5ee774b1b790, 255",-1 ENODATA (No data available)
+195,listxattr,Other,,"""failure_analysis.py"", """", 152",0
+196,statx,Other,,"AT_FDCWD, ""gui.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=72543, ...}",0
+197,lgetxattr,Other,,"""gui.py"", ""security.selinux"", 0x5ee774b1b8c0, 255",-1 ENODATA (No data available)
+198,listxattr,Other,,"""gui.py"", """", 152",0
+199,statx,Other,,"AT_FDCWD, ""Mini_Project_Idea_List.pdf"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=170780, ...}",0
+200,lgetxattr,Other,,"""Mini_Project_Idea_List.pdf"", ""security.selinux"", 0x5ee774b1b8e0, 255",-1 ENODATA (No data available)
+201,listxattr,Other,,"""Mini_Project_Idea_List.pdf"", """", 152",0
+202,statx,Other,,"AT_FDCWD, ""OPERATING-SYSTEMS.pdf"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=141198, ...}",0
+203,lgetxattr,Other,,"""OPERATING-SYSTEMS.pdf"", ""security.selinux"", 0x5ee774b1b910, 255",-1 ENODATA (No data available)
+204,listxattr,Other,,"""OPERATING-SYSTEMS.pdf"", """", 152",0
+205,statx,Other,,"AT_FDCWD, ""OS_Case_Study_Guide.pdf"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=24232, ...}",0
+206,lgetxattr,Other,,"""OS_Case_Study_Guide.pdf"", ""security.selinux"", 0x5ee774b1b930, 255",-1 ENODATA (No data available)
+207,listxattr,Other,,"""OS_Case_Study_Guide.pdf"", """", 152",0
+208,statx,Other,,"AT_FDCWD, ""parser.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=6346, ...}",0
+209,lgetxattr,Other,,"""parser.py"", ""security.selinux"", 0x5ee774b1b950, 255",-1 ENODATA (No data available)
+210,listxattr,Other,,"""parser.py"", """", 152",0
+211,statx,Other,,"AT_FDCWD, ""sample.txt"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=60, ...}",0
+212,lgetxattr,Other,,"""sample.txt"", ""security.selinux"", 0x5ee774b1b970, 255",-1 ENODATA (No data available)
+213,listxattr,Other,,"""sample.txt"", """", 152",0
+214,statx,Other,,"AT_FDCWD, ""statistics.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=3430, ...}",0
+215,lgetxattr,Other,,"""statistics.py"", ""security.selinux"", 0x5ee774b1b990, 255",-1 ENODATA (No data available)
+216,listxattr,Other,,"""statistics.py"", """", 152",0
+217,statx,Other,,"AT_FDCWD, ""syscall_info.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=13295, ...}",0
+218,lgetxattr,Other,,"""syscall_info.py"", ""security.selinux"", 0x5ee774b1b9b0, 255",-1 ENODATA (No data available)
+219,listxattr,Other,,"""syscall_info.py"", """", 152",0
+220,statx,Other,,"AT_FDCWD, ""syscall_report_20261008_200805.csv"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=9080, ...}",0
+221,lgetxattr,Other,,"""syscall_report_20261008_200805.csv"", ""security.selinux"", 0x5ee774b1b9d0, 255",-1 ENODATA (No data available)
+222,listxattr,Other,,"""syscall_report_20261008_200805.csv"", """", 152",0
+223,statx,Other,,"AT_FDCWD, ""tracer.py"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFREG|0777, stx_size=3032, ...}",0
+224,lgetxattr,Other,,"""tracer.py"", ""security.selinux"", 0x5ee774b1ba00, 255",-1 ENODATA (No data available)
+225,listxattr,Other,,"""tracer.py"", """", 152",0
+226,statx,Other,,"AT_FDCWD, ""__pycache__"", AT_STATX_SYNC_AS_STAT|AT_SYMLINK_NOFOLLOW|AT_NO_AUTOMOUNT, STATX_MODE|STATX_NLINK|STATX_UID|STATX_GID|STATX_MTIME|STATX_SIZE, {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID, stx_attributes=0, stx_mode=S_IFDIR|0777, stx_size=4096, ...}",0
+227,lgetxattr,Other,,"""__pycache__"", ""security.selinux"", 0x5ee774b1ba20, 255",-1 ENODATA (No data available)
+228,listxattr,Other,,"""__pycache__"", """", 152",0
+229,getdents64,Other,,"3, 0x5ee774b12a90 /* 0 entries */, 32768",0
+230,close,File I/O / File System,"fd=3, success",3,0
+231,fstat,File I/O / File System,,"1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}",0
+232,write,File I/O / File System,"fd=1, req=10B, written=10B","1, ""total 492\n"", 10",10
+233,openat,File I/O / File System,"path=""/etc/localtime"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/etc/localtime"", O_RDONLY|O_CLOEXEC",3
+234,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=114, ...}",0
+235,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=114, ...}",0
+236,read,File I/O / File System,"fd=3, req=4096B, read=114B","3, ""TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0""..., 4096",114
+237,lseek,File I/O / File System,,"3, -60, SEEK_CUR",54
+238,read,File I/O / File System,"fd=3, req=4096B, read=60B","3, ""TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0""..., 4096",60
+239,close,File I/O / File System,"fd=3, success",3,0
+240,write,File I/O / File System,"fd=1, req=47B, written=47B","1, ""drwxrwxrwx 1 ishan ishan   4096 ""..., 47",47
+241,write,File I/O / File System,"fd=1, req=48B, written=48B","1, ""drwxrwxrwx 1 ishan ishan   4096 ""..., 48",48
+242,write,File I/O / File System,"fd=1, req=53B, written=53B","1, ""drwxrwxrwx 1 ishan ishan   4096 ""..., 53",53
+243,write,File I/O / File System,"fd=1, req=72B, written=72B","1, ""-rwxrwxrwx 1 ishan ishan 170780 ""..., 72",72
+244,write,File I/O / File System,"fd=1, req=67B, written=67B","1, ""-rwxrwxrwx 1 ishan ishan 141198 ""..., 67",67
+245,write,File I/O / File System,"fd=1, req=69B, written=69B","1, ""-rwxrwxrwx 1 ishan ishan  24232 ""..., 69",69
+246,write,File I/O / File System,"fd=1, req=57B, written=57B","1, ""drwxrwxrwx 1 ishan ishan   4096 ""..., 57",57
+247,write,File I/O / File System,"fd=1, req=65B, written=65B","1, ""-rwxrwxrwx 1 ishan ishan   2354 ""..., 65",65
+248,write,File I/O / File System,"fd=1, req=62B, written=62B","1, ""-rwxrwxrwx 1 ishan ishan  11643 ""..., 62",62
+249,write,File I/O / File System,"fd=1, req=95B, written=95B","1, ""-rwxrwxrwx 1 ishan ishan  18225 ""..., 95",95
+250,write,File I/O / File System,"fd=1, req=65B, written=65B","1, ""-rwxrwxrwx 1 ishan ishan   7193 ""..., 65",65
+251,write,File I/O / File System,"fd=1, req=52B, written=52B","1, ""-rwxrwxrwx 1 ishan ishan  72543 ""..., 52",52
+252,write,File I/O / File System,"fd=1, req=55B, written=55B","1, ""-rwxrwxrwx 1 ishan ishan   6346 ""..., 55",55
+253,write,File I/O / File System,"fd=1, req=56B, written=56B","1, ""-rwxrwxrwx 1 ishan ishan     60 ""..., 56",56
+254,write,File I/O / File System,"fd=1, req=59B, written=59B","1, ""-rwxrwxrwx 1 ishan ishan   3430 ""..., 59",59
+255,write,File I/O / File System,"fd=1, req=61B, written=61B","1, ""-rwxrwxrwx 1 ishan ishan  13295 ""..., 61",61
+256,write,File I/O / File System,"fd=1, req=80B, written=80B","1, ""-rwxrwxrwx 1 ishan ishan   9080 ""..., 80",80
+257,write,File I/O / File System,"fd=1, req=55B, written=55B","1, ""-rwxrwxrwx 1 ishan ishan   3032 ""..., 55",55
+258,close,File I/O / File System,"fd=1, success",1,0
+259,close,File I/O / File System,"fd=2, success",2,0
+260,exit_group,Process Control,,0,?
+261,execve,Process Control,"path=""/usr/bin/python3"", success","""/usr/bin/python3"", [""python3"", ""-c"", ""print('hello')""], 0x7ffc8b0d1cb0 /* 21 vars */",0
+262,brk,Memory Management,,NULL,0x15ed7000
+263,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x762050d70000","NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050d70000
+264,access,File I/O / File System,,"""/etc/ld.so.preload"", R_OK",-1 ENOENT (No such file or directory)
+265,openat,File I/O / File System,"path=""/etc/ld.so.cache"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/etc/ld.so.cache"", O_RDONLY|O_CLOEXEC",3
+266,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=21099, ...}",0
+267,mmap,Memory Management,"len=21099B, prot=PROT_READ, addr=0x762050d6a000","NULL, 21099, PROT_READ, MAP_PRIVATE, 3, 0",0x762050d6a000
+268,close,File I/O / File System,"fd=3, success",3,0
+269,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libm.so.6"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libm.so.6"", O_RDONLY|O_CLOEXEC",3
+270,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0""..., 832",832
+271,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=952616, ...}",0
+272,mmap,Memory Management,"len=950296B, prot=PROT_READ, addr=0x762050c81000","NULL, 950296, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x762050c81000
+273,mmap,Memory Management,"len=520192B, prot=PROT_READ|PROT_EXEC, addr=0x762050c91000","0x762050c91000, 520192, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x10000",0x762050c91000
+274,mmap,Memory Management,"len=360448B, prot=PROT_READ, addr=0x762050d10000","0x762050d10000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x8f000",0x762050d10000
+275,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x762050d68000","0x762050d68000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xe7000",0x762050d68000
+276,close,File I/O / File System,"fd=3, success",3,0
+277,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libz.so.1"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libz.so.1"", O_RDONLY|O_CLOEXEC",3
+278,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0""..., 832",832
+279,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=113000, ...}",0
+280,mmap,Memory Management,"len=110744B, prot=PROT_READ, addr=0x762050c65000","NULL, 110744, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x762050c65000
+281,mmap,Memory Management,"len=73728B, prot=PROT_READ|PROT_EXEC, addr=0x762050c67000","0x762050c67000, 73728, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000",0x762050c67000
+282,mmap,Memory Management,"len=24576B, prot=PROT_READ, addr=0x762050c79000","0x762050c79000, 24576, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x14000",0x762050c79000
+283,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x762050c7f000","0x762050c7f000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a000",0x762050c7f000
+284,close,File I/O / File System,"fd=3, success",3,0
+285,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libexpat.so.1"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libexpat.so.1"", O_RDONLY|O_CLOEXEC",3
+286,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0""..., 832",832
+287,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=186624, ...}",0
+288,mmap,Memory Management,"len=184448B, prot=PROT_READ, addr=0x762050c37000","NULL, 184448, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x762050c37000
+289,mmap,Memory Management,"len=126976B, prot=PROT_READ|PROT_EXEC, addr=0x762050c3b000","0x762050c3b000, 126976, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000",0x762050c3b000
+290,mmap,Memory Management,"len=32768B, prot=PROT_READ, addr=0x762050c5a000","0x762050c5a000, 32768, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x23000",0x762050c5a000
+291,mmap,Memory Management,"len=12288B, prot=PROT_READ|PROT_WRITE, addr=0x762050c62000","0x762050c62000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2b000",0x762050c62000
+292,close,File I/O / File System,"fd=3, success",3,0
+293,openat,File I/O / File System,"path=""/lib/x86_64-linux-gnu/libc.so.6"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/lib/x86_64-linux-gnu/libc.so.6"", O_RDONLY|O_CLOEXEC",3
+294,read,File I/O / File System,"fd=3, req=832B, read=832B","3, ""\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\243\2\0\0\0\0\0""..., 832",832
+295,pread64,File I/O / File System,"fd=3, req=784B, read=784B","3, ""\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0""..., 784, 64",784
+296,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0755, st_size=2129424, ...}",0
+297,pread64,File I/O / File System,"fd=3, req=784B, read=784B","3, ""\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0""..., 784, 64",784
+298,mmap,Memory Management,"len=2174352B, prot=PROT_READ, addr=0x762050a00000","NULL, 2174352, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0",0x762050a00000
+299,mmap,Memory Management,"len=1609728B, prot=PROT_READ|PROT_EXEC, addr=0x762050a28000","0x762050a28000, 1609728, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000",0x762050a28000
+300,mmap,Memory Management,"len=323584B, prot=PROT_READ, addr=0x762050bb1000","0x762050bb1000, 323584, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b1000",0x762050bb1000
+301,mmap,Memory Management,"len=24576B, prot=PROT_READ|PROT_WRITE, addr=0x762050c00000","0x762050c00000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1ff000",0x762050c00000
+302,mmap,Memory Management,"len=52624B, prot=PROT_READ|PROT_WRITE, addr=0x762050c06000","0x762050c06000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0",0x762050c06000
+303,close,File I/O / File System,"fd=3, success",3,0
+304,mmap,Memory Management,"len=8192B, prot=PROT_READ|PROT_WRITE, addr=0x762050c35000","NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050c35000
+305,arch_prctl,Other,,"ARCH_SET_FS, 0x762050c36080",0
+306,set_tid_address,Other,,0x762050c36350,686
+307,set_robust_list,Other,,"0x762050c36360, 24",0
+308,rseq,Other,,"0x762050c369a0, 0x20, 0, 0x53053053",0
+309,mprotect,Memory Management,,"0x762050c00000, 16384, PROT_READ",0
+310,mprotect,Memory Management,,"0x762050c62000, 8192, PROT_READ",0
+311,mprotect,Memory Management,,"0x762050c7f000, 4096, PROT_READ",0
+312,mprotect,Memory Management,,"0x762050d68000, 4096, PROT_READ",0
+313,mprotect,Memory Management,,"0xa28000, 4096, PROT_READ",0
+314,mprotect,Memory Management,,"0x762050db0000, 8192, PROT_READ",0
+315,prlimit64,Other,,"0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}",0
+316,munmap,Memory Management,"addr=0x762050d6a000, len=21099B, success","0x762050d6a000, 21099",0
+317,getrandom,Other,,"""\xcc\xab\xb3\x55\x4c\xc9\xa5\x1c"", 8, GRND_NONBLOCK",8
+318,brk,Memory Management,,NULL,0x15ed7000
+319,brk,Memory Management,,0x15ef8000,0x15ef8000
+320,openat,File I/O / File System,"path=""/usr/lib/locale/locale-archive"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/locale-archive"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+321,openat,File I/O / File System,"path=""/usr/share/locale/locale.alias"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/share/locale/locale.alias"", O_RDONLY|O_CLOEXEC",3
+322,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=2996, ...}",0
+323,read,File I/O / File System,"fd=3, req=4096B, read=2996B","3, ""# Locale name alias data base.\n#""..., 4096",2996
+324,read,File I/O / File System,"fd=3, req=4096B, read=0B (EOF)","3, """", 4096",0
+325,close,File I/O / File System,"fd=3, success",3,0
+326,openat,File I/O / File System,"path=""/usr/lib/locale/C.UTF-8/LC_CTYPE"", flags=O_RDONLY|O_CLOEXEC, failed (ENOENT)","AT_FDCWD, ""/usr/lib/locale/C.UTF-8/LC_CTYPE"", O_RDONLY|O_CLOEXEC",-1 ENOENT (No such file or directory)
+327,openat,File I/O / File System,"path=""/usr/lib/locale/C.utf8/LC_CTYPE"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/locale/C.utf8/LC_CTYPE"", O_RDONLY|O_CLOEXEC",3
+328,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=360460, ...}",0
+329,mmap,Memory Management,"len=360460B, prot=PROT_READ, addr=0x7620509a7000","NULL, 360460, PROT_READ, MAP_PRIVATE, 3, 0",0x7620509a7000
+330,close,File I/O / File System,"fd=3, success",3,0
+331,openat,File I/O / File System,"path=""/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache"", O_RDONLY|O_CLOEXEC",3
+332,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=27028, ...}",0
+333,mmap,Memory Management,"len=27028B, prot=PROT_READ, addr=0x762050c2e000","NULL, 27028, PROT_READ, MAP_SHARED, 3, 0",0x762050c2e000
+334,close,File I/O / File System,"fd=3, success",3,0
+335,futex,Other,,"0x762050c0572c, FUTEX_WAKE_PRIVATE, 2147483647",0
+336,getrandom,Other,,"""\xca\x31\x22\xfe\x93\x55\xc9\x04\xeb\x5a\xc1\xdc\xda\x16\x1f\xee\x36\xcc\x2e\xf6\xbb\x0b\xe3\xd4"", 24, GRND_NONBLOCK",24
+337,gettid,Other,,,686
+338,mmap,Memory Management,"len=1048576B, prot=PROT_READ|PROT_WRITE, addr=0x7620508a7000","NULL, 1048576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x7620508a7000
+339,mmap,Memory Management,"len=266240B, prot=PROT_READ|PROT_WRITE, addr=0x762050866000","NULL, 266240, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050866000
+340,mmap,Memory Management,"len=135168B, prot=PROT_READ|PROT_WRITE, addr=0x762050845000","NULL, 135168, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050845000
+341,brk,Memory Management,,0x15f19000,0x15f19000
+342,mmap,Memory Management,"len=16384B, prot=PROT_READ|PROT_WRITE, addr=0x762050d6c000","NULL, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050d6c000
+343,brk,Memory Management,,0x15f3a000,0x15f3a000
+344,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/sbin/python3"", 0x7ffeb26ce860, 0",-1 ENOENT (No such file or directory)
+345,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/bin/python3"", 0x7ffeb26ce860, 0",-1 ENOENT (No such file or directory)
+346,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/sbin/python3"", 0x7ffeb26ce860, 0",-1 ENOENT (No such file or directory)
+347,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/python3"", {st_mode=S_IFREG|0755, st_size=8020928, ...}, 0",0
+348,openat,File I/O / File System,"path=""/usr/pyvenv.cfg"", flags=O_RDONLY, failed (ENOENT)","AT_FDCWD, ""/usr/pyvenv.cfg"", O_RDONLY",-1 ENOENT (No such file or directory)
+349,openat,File I/O / File System,"path=""/usr/bin/pyvenv.cfg"", flags=O_RDONLY, failed (ENOENT)","AT_FDCWD, ""/usr/bin/pyvenv.cfg"", O_RDONLY",-1 ENOENT (No such file or directory)
+350,readlink,File I/O / File System,,"""/usr/bin/python3"", ""python3.12"", 4096",10
+351,readlink,File I/O / File System,,"""/usr/bin/python3.12"", 0x7ffeb26c9880, 4096",-1 EINVAL (Invalid argument)
+352,openat,File I/O / File System,"path=""/usr/bin/python3._pth"", flags=O_RDONLY, failed (ENOENT)","AT_FDCWD, ""/usr/bin/python3._pth"", O_RDONLY",-1 ENOENT (No such file or directory)
+353,openat,File I/O / File System,"path=""/usr/bin/python3.12._pth"", flags=O_RDONLY, failed (ENOENT)","AT_FDCWD, ""/usr/bin/python3.12._pth"", O_RDONLY",-1 ENOENT (No such file or directory)
+354,openat,File I/O / File System,"path=""/usr/bin/pybuilddir.txt"", flags=O_RDONLY, failed (ENOENT)","AT_FDCWD, ""/usr/bin/pybuilddir.txt"", O_RDONLY",-1 ENOENT (No such file or directory)
+355,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/Modules/Setup.local"", 0x7ffeb26ce860, 0",-1 ENOENT (No such file or directory)
+356,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/lib/python312.zip"", 0x7ffeb26ce620, 0",-1 ENOENT (No such file or directory)
+357,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python312.zip"", 0x7ffeb26ce680, 0",-1 ENOENT (No such file or directory)
+358,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/lib/python3.12/os.py"", 0x7ffeb26ce680, 0",-1 ENOENT (No such file or directory)
+359,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/lib/python3.12/os.pyc"", 0x7ffeb26ce680, 0",-1 ENOENT (No such file or directory)
+360,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/os.py"", {st_mode=S_IFREG|0644, st_size=39786, ...}, 0",0
+361,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/lib/python3.12/lib-dynload"", 0x7ffeb26ce680, 0",-1 ENOENT (No such file or directory)
+362,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+363,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+364,openat,File I/O / File System,"path=""/etc/localtime"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/etc/localtime"", O_RDONLY|O_CLOEXEC",3
+365,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=114, ...}",0
+366,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=114, ...}",0
+367,brk,Memory Management,,0x15f5b000,0x15f5b000
+368,read,File I/O / File System,"fd=3, req=4096B, read=114B","3, ""TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0""..., 4096",114
+369,lseek,File I/O / File System,,"3, -60, SEEK_CUR",54
+370,read,File I/O / File System,"fd=3, req=4096B, read=60B","3, ""TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0""..., 4096",60
+371,close,File I/O / File System,"fd=3, success",3,0
+372,brk,Memory Management,,0x15f5a000,0x15f5a000
+373,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python312.zip"", 0x7ffeb26ce0b0, 0",-1 ENOENT (No such file or directory)
+374,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+375,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python312.zip"", 0x7ffeb26ce430, 0",-1 ENOENT (No such file or directory)
+376,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+377,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+378,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+379,openat,File I/O / File System,"path=""/usr/lib/python3.12"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=3","AT_FDCWD, ""/usr/lib/python3.12"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",3
+380,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0755, st_size=20480, ...}",0
+381,getdents64,Other,,"3, 0x15f3bc30 /* 203 entries */, 32768",6784
+382,getdents64,Other,,"3, 0x15f3bc30 /* 0 entries */, 32768",0
+383,close,File I/O / File System,"fd=3, success",3,0
+384,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/__init__.cpython-312-x86_64-linux-gnu.so"", 0x7ffeb26ce430, 0",-1 ENOENT (No such file or directory)
+385,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/__init__.abi3.so"", 0x7ffeb26ce430, 0",-1 ENOENT (No such file or directory)
+386,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/__init__.so"", 0x7ffeb26ce430, 0",-1 ENOENT (No such file or directory)
+387,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/__init__.py"", {st_mode=S_IFREG|0644, st_size=5884, ...}, 0",0
+388,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/__init__.py"", {st_mode=S_IFREG|0644, st_size=5884, ...}, 0",0
+389,openat,File I/O / File System,"path=""/usr/lib/python3.12/encodings/__pycache__/__init__.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3.12/encodings/__pycache__/__init__.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",3
+390,fcntl,Other,,"3, F_GETFD",0x1 (flags FD_CLOEXEC)
+391,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=5790, ...}",0
+392,ioctl,Other,,"3, TCGETS, 0x7ffeb26ce070",-1 ENOTTY (Inappropriate ioctl for device)
+393,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+394,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+395,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=5790, ...}",0
+396,read,File I/O / File System,"fd=3, req=5791B, read=5790B","3, ""\313\r\r\n\0\0\0\0\362T\225j\374\26\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\6\0\0""..., 5791",5790
+397,read,File I/O / File System,"fd=3, req=1B, read=0B (EOF)","3, """", 1",0
+398,close,File I/O / File System,"fd=3, success",3,0
+399,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+400,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+401,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+402,openat,File I/O / File System,"path=""/usr/lib/python3.12/encodings"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=3","AT_FDCWD, ""/usr/lib/python3.12/encodings"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",3
+403,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0755, st_size=20480, ...}",0
+404,getdents64,Other,,"3, 0x15f453f0 /* 125 entries */, 32768",4224
+405,getdents64,Other,,"3, 0x15f453f0 /* 0 entries */, 32768",0
+406,close,File I/O / File System,"fd=3, success",3,0
+407,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/aliases.py"", {st_mode=S_IFREG|0644, st_size=15677, ...}, 0",0
+408,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/aliases.py"", {st_mode=S_IFREG|0644, st_size=15677, ...}, 0",0
+409,openat,File I/O / File System,"path=""/usr/lib/python3.12/encodings/__pycache__/aliases.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3.12/encodings/__pycache__/aliases.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",3
+410,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=12408, ...}",0
+411,ioctl,Other,,"3, TCGETS, 0x7ffeb26cd5f0",-1 ENOTTY (Inappropriate ioctl for device)
+412,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+413,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+414,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=12408, ...}",0
+415,read,File I/O / File System,"fd=3, req=12409B, read=12408B","3, ""\313\r\r\n\0\0\0\0\362T\225j==\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 12409",12408
+416,read,File I/O / File System,"fd=3, req=1B, read=0B (EOF)","3, """", 1",0
+417,close,File I/O / File System,"fd=3, success",3,0
+418,brk,Memory Management,,0x15f7b000,0x15f7b000
+419,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+420,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/utf_8.py"", {st_mode=S_IFREG|0644, st_size=1005, ...}, 0",0
+421,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/encodings/utf_8.py"", {st_mode=S_IFREG|0644, st_size=1005, ...}, 0",0
+422,openat,File I/O / File System,"path=""/usr/lib/python3.12/encodings/__pycache__/utf_8.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3.12/encodings/__pycache__/utf_8.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",3
+423,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=2147, ...}",0
+424,ioctl,Other,,"3, TCGETS, 0x7ffeb26ce100",-1 ENOTTY (Inappropriate ioctl for device)
+425,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+426,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+427,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=2147, ...}",0
+428,read,File I/O / File System,"fd=3, req=2148B, read=2147B","3, ""\313\r\r\n\0\0\0\0\362T\225j\355\3\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 2148",2147
+429,read,File I/O / File System,"fd=3, req=1B, read=0B (EOF)","3, """", 1",0
+430,close,File I/O / File System,"fd=3, success",3,0
+431,rt_sigaction,Signal,,"SIGPIPE, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+432,rt_sigaction,Signal,,"SIGXFSZ, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+433,mmap,Memory Management,"len=1048576B, prot=PROT_READ|PROT_WRITE, addr=0x762050745000","NULL, 1048576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0",0x762050745000
+434,rt_sigaction,Signal,,"SIGHUP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+435,rt_sigaction,Signal,,"SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+436,rt_sigaction,Signal,,"SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+437,rt_sigaction,Signal,,"SIGILL, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+438,rt_sigaction,Signal,,"SIGTRAP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+439,rt_sigaction,Signal,,"SIGABRT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+440,rt_sigaction,Signal,,"SIGBUS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+441,rt_sigaction,Signal,,"SIGFPE, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+442,rt_sigaction,Signal,,"SIGKILL, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+443,rt_sigaction,Signal,,"SIGUSR1, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+444,rt_sigaction,Signal,,"SIGSEGV, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+445,rt_sigaction,Signal,,"SIGUSR2, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+446,rt_sigaction,Signal,,"SIGPIPE, NULL, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, 8",0
+447,rt_sigaction,Signal,,"SIGALRM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+448,rt_sigaction,Signal,,"SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+449,rt_sigaction,Signal,,"SIGSTKFLT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+450,rt_sigaction,Signal,,"SIGCHLD, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+451,rt_sigaction,Signal,,"SIGCONT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+452,rt_sigaction,Signal,,"SIGSTOP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+453,rt_sigaction,Signal,,"SIGTSTP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+454,rt_sigaction,Signal,,"SIGTTIN, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+455,rt_sigaction,Signal,,"SIGTTOU, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+456,rt_sigaction,Signal,,"SIGURG, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+457,rt_sigaction,Signal,,"SIGXCPU, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+458,rt_sigaction,Signal,,"SIGXFSZ, NULL, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, 8",0
+459,rt_sigaction,Signal,,"SIGVTALRM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+460,rt_sigaction,Signal,,"SIGPROF, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+461,rt_sigaction,Signal,,"SIGWINCH, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+462,rt_sigaction,Signal,,"SIGIO, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+463,rt_sigaction,Signal,,"SIGPWR, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+464,rt_sigaction,Signal,,"SIGSYS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+465,rt_sigaction,Signal,,"SIGRT_2, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+466,rt_sigaction,Signal,,"SIGRT_3, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+467,rt_sigaction,Signal,,"SIGRT_4, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+468,rt_sigaction,Signal,,"SIGRT_5, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+469,rt_sigaction,Signal,,"SIGRT_6, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+470,rt_sigaction,Signal,,"SIGRT_7, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+471,rt_sigaction,Signal,,"SIGRT_8, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+472,rt_sigaction,Signal,,"SIGRT_9, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+473,rt_sigaction,Signal,,"SIGRT_10, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+474,rt_sigaction,Signal,,"SIGRT_11, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+475,rt_sigaction,Signal,,"SIGRT_12, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+476,rt_sigaction,Signal,,"SIGRT_13, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+477,rt_sigaction,Signal,,"SIGRT_14, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+478,rt_sigaction,Signal,,"SIGRT_15, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+479,rt_sigaction,Signal,,"SIGRT_16, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+480,rt_sigaction,Signal,,"SIGRT_17, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+481,rt_sigaction,Signal,,"SIGRT_18, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+482,rt_sigaction,Signal,,"SIGRT_19, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+483,rt_sigaction,Signal,,"SIGRT_20, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+484,rt_sigaction,Signal,,"SIGRT_21, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+485,rt_sigaction,Signal,,"SIGRT_22, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+486,rt_sigaction,Signal,,"SIGRT_23, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+487,rt_sigaction,Signal,,"SIGRT_24, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+488,rt_sigaction,Signal,,"SIGRT_25, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+489,rt_sigaction,Signal,,"SIGRT_26, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+490,rt_sigaction,Signal,,"SIGRT_27, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+491,rt_sigaction,Signal,,"SIGRT_28, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+492,rt_sigaction,Signal,,"SIGRT_29, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+493,rt_sigaction,Signal,,"SIGRT_30, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+494,rt_sigaction,Signal,,"SIGRT_31, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+495,rt_sigaction,Signal,,"SIGRT_32, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+496,rt_sigaction,Signal,,"SIGINT, {sa_handler=0x6e79b0, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8",0
+497,fstat,File I/O / File System,,"0, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}",0
+498,fcntl,Other,,"0, F_GETFD",0
+499,fstat,File I/O / File System,,"0, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}",0
+500,ioctl,Other,,"0, TCGETS, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}",0
+501,lseek,File I/O / File System,,"0, 0, SEEK_CUR",-1 ESPIPE (Illegal seek)
+502,ioctl,Other,,"0, TCGETS, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}",0
+503,fcntl,Other,,"1, F_GETFD",0
+504,fstat,File I/O / File System,,"1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}",0
+505,ioctl,Other,,"1, TCGETS, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}",0
+506,lseek,File I/O / File System,,"1, 0, SEEK_CUR",-1 ESPIPE (Illegal seek)
+507,ioctl,Other,,"1, TCGETS, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}",0
+508,fcntl,Other,,"2, F_GETFD",0
+509,fstat,File I/O / File System,,"2, {st_mode=S_IFIFO|0600, st_size=0, ...}",0
+510,ioctl,Other,,"2, TCGETS, 0x7ffeb26ce7f0",-1 ENOTTY (Inappropriate ioctl for device)
+511,lseek,File I/O / File System,,"2, 0, SEEK_CUR",-1 ESPIPE (Illegal seek)
+512,ioctl,Other,,"2, TCGETS, 0x7ffeb26cea80",-1 ENOTTY (Inappropriate ioctl for device)
+513,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/bin/pyvenv.cfg"", 0x7ffeb26ce070, 0",-1 ENOENT (No such file or directory)
+514,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/pyvenv.cfg"", 0x7ffeb26ce0d0, 0",-1 ENOENT (No such file or directory)
+515,geteuid,Other,,,1000
+516,getuid,Other,,,1000
+517,getegid,Other,,,1000
+518,getgid,Other,,,1000
+519,newfstatat,File I/O / File System,,"AT_FDCWD, ""/home/ishan/.local/lib/python3.12/site-packages"", 0x7ffeb26ce2a0, 0",-1 ENOENT (No such file or directory)
+520,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+521,openat,File I/O / File System,"path=""/usr/local/lib/python3.12/dist-packages"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=3","AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",3
+522,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0755, st_size=4096, ...}",0
+523,getdents64,Other,,"3, 0x15f69c20 /* 2 entries */, 32768",48
+524,getdents64,Other,,"3, 0x15f69c20 /* 0 entries */, 32768",0
+525,close,File I/O / File System,"fd=3, success",3,0
+526,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+527,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=3","AT_FDCWD, ""/usr/lib/python3/dist-packages"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",3
+528,fstat,File I/O / File System,,"3, {st_mode=S_IFDIR|0755, st_size=12288, ...}",0
+529,getdents64,Other,,"3, 0x15f69c20 /* 157 entries */, 32768",6440
+530,getdents64,Other,,"3, 0x15f69c20 /* 0 entries */, 32768",0
+531,close,File I/O / File System,"fd=3, success",3,0
+532,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/distutils-precedence.pth"", {st_mode=S_IFREG|0644, st_size=151, ...}, AT_SYMLINK_NOFOLLOW",0
+533,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages/distutils-precedence.pth"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3/dist-packages/distutils-precedence.pth"", O_RDONLY|O_CLOEXEC",3
+534,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=151, ...}",0
+535,ioctl,Other,,"3, TCGETS, 0x7ffeb26cdf40",-1 ENOTTY (Inappropriate ioctl for device)
+536,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+537,read,File I/O / File System,"fd=3, req=8192B, read=151B","3, ""import os; var = 'SETUPTOOLS_USE""..., 8192",151
+538,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+539,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+540,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+541,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+542,openat,File I/O / File System,"path=""/usr/lib/python3.12/lib-dynload"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=4","AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",4
+543,fstat,File I/O / File System,,"4, {st_mode=S_IFDIR|0755, st_size=12288, ...}",0
+544,brk,Memory Management,,0x15f9c000,0x15f9c000
+545,getdents64,Other,,"4, 0x15f73350 /* 50 entries */, 32768",3168
+546,getdents64,Other,,"4, 0x15f73350 /* 0 entries */, 32768",0
+547,brk,Memory Management,,0x15f94000,0x15f94000
+548,close,File I/O / File System,"fd=4, success",4,0
+549,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+550,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+551,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+552,openat,File I/O / File System,"path=""/usr/local/lib/python3.12/dist-packages"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=4","AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",4
+553,fstat,File I/O / File System,,"4, {st_mode=S_IFDIR|0755, st_size=4096, ...}",0
+554,getdents64,Other,,"4, 0x15f73350 /* 2 entries */, 32768",48
+555,getdents64,Other,,"4, 0x15f73350 /* 0 entries */, 32768",0
+556,close,File I/O / File System,"fd=4, success",4,0
+557,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+558,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+559,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+560,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=4","AT_FDCWD, ""/usr/lib/python3/dist-packages"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",4
+561,fstat,File I/O / File System,,"4, {st_mode=S_IFDIR|0755, st_size=12288, ...}",0
+562,getdents64,Other,,"4, 0x15f73350 /* 157 entries */, 32768",6440
+563,getdents64,Other,,"4, 0x15f73350 /* 0 entries */, 32768",0
+564,close,File I/O / File System,"fd=4, success",4,0
+565,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__init__.cpython-312-x86_64-linux-gnu.so"", 0x7ffeb26cdb50, 0",-1 ENOENT (No such file or directory)
+566,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__init__.abi3.so"", 0x7ffeb26cdb50, 0",-1 ENOENT (No such file or directory)
+567,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__init__.so"", 0x7ffeb26cdb50, 0",-1 ENOENT (No such file or directory)
+568,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__init__.py"", {st_mode=S_IFREG|0644, st_size=6299, ...}, 0",0
+569,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__init__.py"", {st_mode=S_IFREG|0644, st_size=6299, ...}, 0",0
+570,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages/_distutils_hack/__pycache__/__init__.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3/dist-packages/_distutils_hack/__pycache__/__init__.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+571,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=9998, ...}",0
+572,ioctl,Other,,"4, TCGETS, 0x7ffeb26cd7f0",-1 ENOTTY (Inappropriate ioctl for device)
+573,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+574,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+575,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=9998, ...}",0
+576,read,File I/O / File System,"fd=4, req=9999B, read=9998B","4, ""\313\r\r\n\0\0\0\0\n_\337d\233\30\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\6\0\0""..., 9999",9998
+577,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+578,close,File I/O / File System,"fd=4, success",4,0
+579,read,File I/O / File System,"fd=3, req=8192B, read=0B (EOF)","3, """", 8192",0
+580,close,File I/O / File System,"fd=3, success",3,0
+581,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/zope.interface-6.1-nspkg.pth"", {st_mode=S_IFREG|0644, st_size=529, ...}, AT_SYMLINK_NOFOLLOW",0
+582,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages/zope.interface-6.1-nspkg.pth"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3/dist-packages/zope.interface-6.1-nspkg.pth"", O_RDONLY|O_CLOEXEC",3
+583,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=529, ...}",0
+584,ioctl,Other,,"3, TCGETS, 0x7ffeb26cdfa0",-1 ENOTTY (Inappropriate ioctl for device)
+585,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+586,read,File I/O / File System,"fd=3, req=8192B, read=529B","3, ""import sys, types, os;has_mfs = ""..., 8192",529
+587,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+588,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/types.py"", {st_mode=S_IFREG|0644, st_size=10993, ...}, 0",0
+589,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/types.py"", {st_mode=S_IFREG|0644, st_size=10993, ...}, 0",0
+590,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/types.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/types.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+591,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=14939, ...}",0
+592,ioctl,Other,,"4, TCGETS, 0x7ffeb26cd920",-1 ENOTTY (Inappropriate ioctl for device)
+593,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+594,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+595,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=14939, ...}",0
+596,read,File I/O / File System,"fd=4, req=14940B, read=14939B","4, ""\313\r\r\n\0\0\0\0\362T\225j\361*\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\6\0\0""..., 14940",14939
+597,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+598,close,File I/O / File System,"fd=4, success",4,0
+599,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+600,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/__init__.cpython-312-x86_64-linux-gnu.so"", 0x7ffeb26cd740, 0",-1 ENOENT (No such file or directory)
+601,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/__init__.abi3.so"", 0x7ffeb26cd740, 0",-1 ENOENT (No such file or directory)
+602,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/__init__.so"", 0x7ffeb26cd740, 0",-1 ENOENT (No such file or directory)
+603,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/__init__.py"", {st_mode=S_IFREG|0644, st_size=4774, ...}, 0",0
+604,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/__init__.py"", {st_mode=S_IFREG|0644, st_size=4774, ...}, 0",0
+605,openat,File I/O / File System,"path=""/usr/lib/python3.12/importlib/__pycache__/__init__.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/importlib/__pycache__/__init__.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+606,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=4565, ...}",0
+607,ioctl,Other,,"4, TCGETS, 0x7ffeb26cd3e0",-1 ENOTTY (Inappropriate ioctl for device)
+608,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+609,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+610,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=4565, ...}",0
+611,read,File I/O / File System,"fd=4, req=4566B, read=4565B","4, ""\313\r\r\n\0\0\0\0\362T\225j\246\22\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 4566",4565
+612,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+613,close,File I/O / File System,"fd=4, success",4,0
+614,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+615,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/warnings.py"", {st_mode=S_IFREG|0644, st_size=21760, ...}, 0",0
+616,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/warnings.py"", {st_mode=S_IFREG|0644, st_size=21760, ...}, 0",0
+617,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/warnings.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/warnings.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+618,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=23792, ...}",0
+619,ioctl,Other,,"4, TCGETS, 0x7ffeb26ccd70",-1 ENOTTY (Inappropriate ioctl for device)
+620,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+621,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+622,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=23792, ...}",0
+623,read,File I/O / File System,"fd=4, req=23793B, read=23792B","4, ""\313\r\r\n\0\0\0\0\362T\225j\0U\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\6\0\0""..., 23793",23792
+624,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+625,close,File I/O / File System,"fd=4, success",4,0
+626,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+627,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+628,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+629,openat,File I/O / File System,"path=""/usr/lib/python3.12/importlib"", flags=O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY, fd=4","AT_FDCWD, ""/usr/lib/python3.12/importlib"", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY",4
+630,fstat,File I/O / File System,,"4, {st_mode=S_IFDIR|0755, st_size=4096, ...}",0
+631,getdents64,Other,,"4, 0x15f88180 /* 14 entries */, 32768",456
+632,getdents64,Other,,"4, 0x15f88180 /* 0 entries */, 32768",0
+633,close,File I/O / File System,"fd=4, success",4,0
+634,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/_abc.py"", {st_mode=S_IFREG|0644, st_size=1354, ...}, 0",0
+635,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/importlib/_abc.py"", {st_mode=S_IFREG|0644, st_size=1354, ...}, 0",0
+636,openat,File I/O / File System,"path=""/usr/lib/python3.12/importlib/__pycache__/_abc.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/importlib/__pycache__/_abc.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+637,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=1643, ...}",0
+638,ioctl,Other,,"4, TCGETS, 0x7ffeb26cd220",-1 ENOTTY (Inappropriate ioctl for device)
+639,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+640,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+641,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=1643, ...}",0
+642,read,File I/O / File System,"fd=4, req=1644B, read=1643B","4, ""\313\r\r\n\0\0\0\0\362T\225jJ\5\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 1644",1643
+643,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+644,close,File I/O / File System,"fd=4, success",4,0
+645,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+646,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/threading.py"", {st_mode=S_IFREG|0644, st_size=60123, ...}, 0",0
+647,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/threading.py"", {st_mode=S_IFREG|0644, st_size=60123, ...}, 0",0
+648,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/threading.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/threading.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+649,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=65346, ...}",0
+650,ioctl,Other,,"4, TCGETS, 0x7ffeb26cd220",-1 ENOTTY (Inappropriate ioctl for device)
+651,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+652,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+653,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=65346, ...}",0
+654,brk,Memory Management,,0x15fb9000,0x15fb9000
+655,read,File I/O / File System,"fd=4, req=65347B, read=65346B","4, ""\313\r\r\n\0\0\0\0\362T\225j\333\352\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 65347",65346
+656,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+657,close,File I/O / File System,"fd=4, success",4,0
+658,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+659,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/functools.py"", {st_mode=S_IFREG|0644, st_size=38126, ...}, 0",0
+660,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/functools.py"", {st_mode=S_IFREG|0644, st_size=38126, ...}, 0",0
+661,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/functools.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/functools.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+662,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=40506, ...}",0
+663,ioctl,Other,,"4, TCGETS, 0x7ffeb26ccbb0",-1 ENOTTY (Inappropriate ioctl for device)
+664,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+665,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+666,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=40506, ...}",0
+667,read,File I/O / File System,"fd=4, req=40507B, read=40506B","4, ""\313\r\r\n\0\0\0\0\362T\225j\356\224\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\7\0\0""..., 40507",40506
+668,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+669,close,File I/O / File System,"fd=4, success",4,0
+670,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+671,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/collections/__init__.cpython-312-x86_64-linux-gnu.so"", 0x7ffeb26cc8a0, 0",-1 ENOENT (No such file or directory)
+672,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/collections/__init__.abi3.so"", 0x7ffeb26cc8a0, 0",-1 ENOENT (No such file or directory)
+673,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/collections/__init__.so"", 0x7ffeb26cc8a0, 0",-1 ENOENT (No such file or directory)
+674,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/collections/__init__.py"", {st_mode=S_IFREG|0644, st_size=52378, ...}, 0",0
+675,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/collections/__init__.py"", {st_mode=S_IFREG|0644, st_size=52378, ...}, 0",0
+676,openat,File I/O / File System,"path=""/usr/lib/python3.12/collections/__pycache__/__init__.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/collections/__pycache__/__init__.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+677,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=73089, ...}",0
+678,ioctl,Other,,"4, TCGETS, 0x7ffeb26cc540",-1 ENOTTY (Inappropriate ioctl for device)
+679,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+680,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+681,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=73089, ...}",0
+682,read,File I/O / File System,"fd=4, req=73090B, read=73089B","4, ""\313\r\r\n\0\0\0\0\362T\225j\232\314\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0""..., 73090",73089
+683,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+684,close,File I/O / File System,"fd=4, success",4,0
+685,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+686,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/keyword.py"", {st_mode=S_IFREG|0644, st_size=1073, ...}, 0",0
+687,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/keyword.py"", {st_mode=S_IFREG|0644, st_size=1073, ...}, 0",0
+688,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/keyword.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/keyword.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+689,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=1041, ...}",0
+690,ioctl,Other,,"4, TCGETS, 0x7ffeb26cbed0",-1 ENOTTY (Inappropriate ioctl for device)
+691,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+692,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+693,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=1041, ...}",0
+694,read,File I/O / File System,"fd=4, req=1042B, read=1041B","4, ""\313\r\r\n\0\0\0\0\362T\225j1\4\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\3\0\0""..., 1042",1041
+695,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+696,close,File I/O / File System,"fd=4, success",4,0
+697,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+698,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/operator.py"", {st_mode=S_IFREG|0644, st_size=10965, ...}, 0",0
+699,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/operator.py"", {st_mode=S_IFREG|0644, st_size=10965, ...}, 0",0
+700,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/operator.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/operator.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+701,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=17364, ...}",0
+702,ioctl,Other,,"4, TCGETS, 0x7ffeb26cbed0",-1 ENOTTY (Inappropriate ioctl for device)
+703,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+704,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+705,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=17364, ...}",0
+706,read,File I/O / File System,"fd=4, req=17365B, read=17364B","4, ""\313\r\r\n\0\0\0\0\362T\225j\325*\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\4\0\0""..., 17365",17364
+707,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+708,close,File I/O / File System,"fd=4, success",4,0
+709,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+710,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/reprlib.py"", {st_mode=S_IFREG|0644, st_size=6569, ...}, 0",0
+711,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/reprlib.py"", {st_mode=S_IFREG|0644, st_size=6569, ...}, 0",0
+712,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/reprlib.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/reprlib.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+713,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=9909, ...}",0
+714,ioctl,Other,,"4, TCGETS, 0x7ffeb26cbed0",-1 ENOTTY (Inappropriate ioctl for device)
+715,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+716,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+717,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=9909, ...}",0
+718,read,File I/O / File System,"fd=4, req=9910B, read=9909B","4, ""\313\r\r\n\0\0\0\0\362T\225j\251\31\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\4\0\0""..., 9910",9909
+719,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+720,close,File I/O / File System,"fd=4, success",4,0
+721,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+722,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/_weakrefset.py"", {st_mode=S_IFREG|0644, st_size=5893, ...}, 0",0
+723,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/_weakrefset.py"", {st_mode=S_IFREG|0644, st_size=5893, ...}, 0",0
+724,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/_weakrefset.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=4","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/_weakrefset.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",4
+725,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=11751, ...}",0
+726,ioctl,Other,,"4, TCGETS, 0x7ffeb26ccbb0",-1 ENOTTY (Inappropriate ioctl for device)
+727,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+728,lseek,File I/O / File System,,"4, 0, SEEK_CUR",0
+729,fstat,File I/O / File System,,"4, {st_mode=S_IFREG|0644, st_size=11751, ...}",0
+730,read,File I/O / File System,"fd=4, req=11752B, read=11751B","4, ""\313\r\r\n\0\0\0\0\362T\225j\5\27\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\4\0\0""..., 11752",11751
+731,read,File I/O / File System,"fd=4, req=1B, read=0B (EOF)","4, """", 1",0
+732,close,File I/O / File System,"fd=4, success",4,0
+733,gettid,Other,,,686
+734,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+735,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/zope/__init__.cpython-312-x86_64-linux-gnu.so"", 0x7ffeb26ce040, 0",-1 ENOENT (No such file or directory)
+736,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/zope/__init__.abi3.so"", 0x7ffeb26ce040, 0",-1 ENOENT (No such file or directory)
+737,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/zope/__init__.so"", 0x7ffeb26ce040, 0",-1 ENOENT (No such file or directory)
+738,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/zope/__init__.py"", {st_mode=S_IFREG|0644, st_size=56, ...}, 0",0
+739,read,File I/O / File System,"fd=3, req=8192B, read=0B (EOF)","3, """", 8192",0
+740,close,File I/O / File System,"fd=3, success",3,0
+741,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/dist-packages"", 0x7ffeb26ce300, 0",-1 ENOENT (No such file or directory)
+742,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+743,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/sitecustomize.py"", {st_mode=S_IFREG|0644, st_size=155, ...}, 0",0
+744,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/sitecustomize.py"", {st_mode=S_IFREG|0644, st_size=155, ...}, 0",0
+745,openat,File I/O / File System,"path=""/usr/lib/python3.12/__pycache__/sitecustomize.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3.12/__pycache__/sitecustomize.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",3
+746,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=300, ...}",0
+747,ioctl,Other,,"3, TCGETS, 0x7ffeb26cdbe0",-1 ENOTTY (Inappropriate ioctl for device)
+748,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+749,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+750,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=300, ...}",0
+751,read,File I/O / File System,"fd=3, req=301B, read=300B","3, ""\313\r\r\n\0\0\0\0\273$\26f\233\0\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\4\0\0""..., 301",300
+752,read,File I/O / File System,"fd=3, req=1B, read=0B (EOF)","3, """", 1",0
+753,close,File I/O / File System,"fd=3, success",3,0
+754,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+755,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+756,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+757,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+758,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/apport_python_hook.py"", {st_mode=S_IFREG|0644, st_size=8695, ...}, 0",0
+759,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages/apport_python_hook.py"", {st_mode=S_IFREG|0644, st_size=8695, ...}, 0",0
+760,openat,File I/O / File System,"path=""/usr/lib/python3/dist-packages/__pycache__/apport_python_hook.cpython-312.pyc"", flags=O_RDONLY|O_CLOEXEC, fd=3","AT_FDCWD, ""/usr/lib/python3/dist-packages/__pycache__/apport_python_hook.cpython-312.pyc"", O_RDONLY|O_CLOEXEC",3
+761,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=8876, ...}",0
+762,ioctl,Other,,"3, TCGETS, 0x7ffeb26cd570",-1 ENOTTY (Inappropriate ioctl for device)
+763,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+764,lseek,File I/O / File System,,"3, 0, SEEK_CUR",0
+765,fstat,File I/O / File System,,"3, {st_mode=S_IFREG|0644, st_size=8876, ...}",0
+766,read,File I/O / File System,"fd=3, req=8877B, read=8876B","3, ""\313\r\r\n\0\0\0\0\223Q\353i\367!\0\0\343\0\0\0\0\0\0\0\0\0\0\0\0\2\0\0""..., 8877",8876
+767,read,File I/O / File System,"fd=3, req=1B, read=0B (EOF)","3, """", 1",0
+768,close,File I/O / File System,"fd=3, success",3,0
+769,getcwd,File I/O / File System,,"""/mnt/c/Users/ishan/OneDrive/Desktop/College_Files/SEM-5/Operating Systems/sys_call_monitoring"", 1024",94
+770,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12"", {st_mode=S_IFDIR|0755, st_size=20480, ...}, 0",0
+771,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3.12/lib-dynload"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+772,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/local/lib/python3.12/dist-packages"", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0",0
+773,newfstatat,File I/O / File System,,"AT_FDCWD, ""/usr/lib/python3/dist-packages"", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0",0
+774,write,File I/O / File System,"fd=1, req=6B, written=6B","1, ""hello\n"", 6",6
+775,rt_sigaction,Signal,,"SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, {sa_handler=0x6e79b0, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK, sa_restorer=0x762050a45330}, 8",0
+776,munmap,Memory Management,"addr=0x762050d6c000, len=16384B, success","0x762050d6c000, 16384",0
+777,exit_group,Process Control,,0,?
