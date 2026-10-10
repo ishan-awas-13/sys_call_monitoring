@@ -816,6 +816,20 @@ class SyscallMonitorApp:
         )
         self.lbl_ptree_summary.pack(side="left", padx=8)
 
+        self._ptree_session_ids = [None]
+        ptree_session_controls = ttk.Frame(ptree_summary_frame)
+        ptree_session_controls.pack(side="right", padx=4)
+        ttk.Label(ptree_session_controls, text="Session:").pack(side="left", padx=(0, 4))
+        self.combo_ptree_session = ttk.Combobox(
+            ptree_session_controls,
+            values=["Current / Live"],
+            state="readonly",
+            width=42
+        )
+        self.combo_ptree_session.current(0)
+        self.combo_ptree_session.pack(side="left", padx=4)
+        self.combo_ptree_session.bind("<<ComboboxSelected>>", self._on_ptree_session_selected)
+
         btn_refresh_ptree = ttk.Button(ptree_summary_frame, text="⟲ Refresh Tree", command=self._refresh_ptree_ui)
         btn_refresh_ptree.pack(side="right", padx=6)
 
@@ -871,46 +885,101 @@ class SyscallMonitorApp:
         self.btn_filter_pid.pack(side="right", padx=8)
 
     def _refresh_ptree_ui(self):
-        """Refreshes the Process Tree view reflecting real-time process hierarchy."""
+        """Displays the selected saved process tree or the current live tree."""
         if not hasattr(self, "ptree_view"):
             return
 
         for item in self.ptree_view.get_children():
             self.ptree_view.delete(item)
+        self.lbl_ptree_detail.config(text="Select a process node above to inspect its execution metrics.")
+        self.btn_filter_pid.config(state="disabled")
 
-        nodes = self.process_tree_tracker.get_all_nodes()
+        selected_index = self.combo_ptree_session.current()
+        selected_session = None
+        if 0 < selected_index < len(self._ptree_session_ids):
+            selected_id = self._ptree_session_ids[selected_index]
+            selected_session = next(
+                (session for session in self.session_history if session["id"] == selected_id),
+                None
+            )
+
+        if selected_session:
+            nodes = selected_session.get("process_tree", [])
+            child_mode_enabled = selected_session.get("follow_children", False)
+        else:
+            nodes = [
+                {
+                    "pid": node.pid,
+                    "ppid": node.ppid,
+                    "command": node.command,
+                    "status": node.status,
+                    "syscall_count": node.syscall_count,
+                    "children": list(node.children),
+                }
+                for node in self.process_tree_tracker.get_all_nodes()
+            ]
+            child_mode_enabled = self.follow_children_var.get()
+
+        nodes_by_pid = {str(node["pid"]): node for node in nodes}
         total_procs = len(nodes)
-        child_mode = "Enabled (-f)" if self.follow_children_var.get() else "Disabled"
+        child_mode = "Enabled (-f)" if child_mode_enabled else "Disabled"
         self.lbl_ptree_summary.config(
             text=f"Processes Tracked: {total_procs} | Mode: Child Tracing {child_mode}"
         )
 
         visited = set()
 
-        def add_node_and_children(node: ProcessNode, parent_iid=""):
-            visited.add(node.pid)
-            iid = f"proc_{node.pid}"
-            label = f"[PID {node.pid}] {node.command}"
-            ppid_str = str(node.ppid) if node.ppid else "N/A"
+        def add_node_and_children(node, parent_iid=""):
+            pid = str(node["pid"])
+            visited.add(pid)
+            iid = f"proc_{pid}"
+            label = f"[PID {pid}] {node['command']}"
+            ppid_str = str(node["ppid"]) if node["ppid"] else "N/A"
             self.ptree_view.insert(
                 parent_iid,
                 "end",
                 iid=iid,
                 text=label,
-                values=(node.pid, ppid_str, node.command, node.status, node.syscall_count),
+                values=(pid, ppid_str, node["command"], node["status"], node["syscall_count"]),
                 open=True
             )
-            for child in self.process_tree_tracker.get_children(node.pid):
-                if child.pid not in visited:
+            for child_pid in node.get("children", []):
+                child = nodes_by_pid.get(str(child_pid))
+                if child and str(child_pid) not in visited:
                     add_node_and_children(child, parent_iid=iid)
 
-        roots = self.process_tree_tracker.get_root_nodes()
+        roots = [
+            node for node in nodes
+            if not node["ppid"] or str(node["ppid"]) not in nodes_by_pid or str(node["ppid"]) == str(node["pid"])
+        ]
         for root_node in roots:
             add_node_and_children(root_node, parent_iid="")
 
         for node in nodes:
-            if node.pid not in visited:
+            if str(node["pid"]) not in visited:
                 add_node_and_children(node, parent_iid="")
+
+    def _refresh_ptree_session_selector(self, selected_session_id=None):
+        """Refreshes the process-tree session choices and selects the requested entry."""
+        if not hasattr(self, "combo_ptree_session"):
+            return
+
+        labels = ["Current / Live"]
+        session_ids = [None]
+        for session in self.session_history:
+            labels.append(
+                f"#{session['id']}: {session['command']} ({session['total_count']} calls, {session['timestamp']})"
+            )
+            session_ids.append(session["id"])
+
+        self._ptree_session_ids = session_ids
+        self.combo_ptree_session["values"] = labels
+        selected_index = session_ids.index(selected_session_id) if selected_session_id in session_ids else 0
+        self.combo_ptree_session.current(selected_index)
+
+    def _on_ptree_session_selected(self, event=None):
+        """Displays the chosen saved session tree or returns to the live process tree."""
+        self._refresh_ptree_ui()
 
     def _on_ptree_node_select(self, event=None):
         """Updates detail panel and enables filter button when a process node is selected."""
@@ -927,10 +996,12 @@ class SyscallMonitorApp:
         self.lbl_ptree_detail.config(
             text=f"Selected: PID {pid} (Parent: {ppid}) | Binary: {cmd} | Status: {status} | Syscalls: {count}"
         )
-        self.btn_filter_pid.config(state="normal")
+        self.btn_filter_pid.config(state="normal" if self.combo_ptree_session.current() == 0 else "disabled")
 
     def _filter_trace_by_selected_pid(self):
         """Filters the main monitor table by the selected PID."""
+        if self.combo_ptree_session.current() != 0:
+            return
         selected = self.ptree_view.selection()
         if not selected:
             return
@@ -1121,6 +1192,8 @@ class SyscallMonitorApp:
             self.cmp_tree.delete(item)
         for item in self.freq_tree.get_children():
             self.freq_tree.delete(item)
+        self._refresh_ptree_session_selector()
+        self._refresh_ptree_ui()
 
     def _save_current_session(self, status: str):
         """Saves current monitoring session records and statistics into in-memory history."""
@@ -1140,9 +1213,22 @@ class SyscallMonitorApp:
             "category_counts": dict(stats["category_counts"]),
             "syscall_frequency": dict(stats["syscall_frequency"]),
             "records": list(self.records),
+            "follow_children": self.follow_children_var.get(),
+            "process_tree": [
+                {
+                    "pid": node.pid,
+                    "ppid": node.ppid,
+                    "command": node.command,
+                    "status": node.status,
+                    "syscall_count": node.syscall_count,
+                    "children": list(node.children),
+                }
+                for node in self.process_tree_tracker.get_all_nodes()
+            ],
         }
         self.session_history.append(session_data)
         self._refresh_history_ui()
+        self._refresh_ptree_session_selector(session_data["id"])
 
     def _refresh_history_ui(self):
         """Updates the session history treeview and combobox values."""
@@ -1382,6 +1468,8 @@ class SyscallMonitorApp:
         # Phase 8: Follow child processes flag & process tree reset
         follow_children = self.follow_children_var.get()
         self.process_tree_tracker.reset(root_command=cmd)
+        self._refresh_ptree_session_selector()
+        self._refresh_ptree_ui()
 
         self.btn_start.config(state="disabled")
         self.btn_stop.config(state="normal")
@@ -1465,6 +1553,7 @@ class SyscallMonitorApp:
         self.session_start_time = None
         self._session_saved = False
         self.process_tree_tracker.reset(root_command=self.cmd_entry.get().strip())
+        self._refresh_ptree_session_selector()
 
         self._reset_about_panel()
         self._refresh_stats_ui()
