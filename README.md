@@ -62,16 +62,35 @@ Categorizes system calls according to Operating System fundamentals:
 - Includes a **📁 Select Directory...** dialog, manual path entry with automatic Windows-to-WSL path translation (`C:\...` -> `/mnt/c/...`), and a **Default** reset button.
 - The execution working directory is tracked in session history, side-by-side session comparisons, and exported reports.
 
+### 13. Live Process & Resource Dashboard (Linux `/proc` Engine)
+- Dedicated **Processes & Resources** tab providing a macroscopic view of all active processes running in the Linux operating system.
+- Zero external package dependencies: directly reads and parses the Linux Virtual File System (`/proc/stat`, `/proc/[pid]/status`, `/proc/[pid]/stat`, `/proc/[pid]/cmdline`).
+- Live metrics: **PID**, **PPID**, **Binary Name**, **Owner User**, **Process State** (`R`, `S`, `D`, `Z`, `T`), **CPU Utilization %**, **Physical RAM (RSS)**, **Virtual Memory (VmSize)**, **Thread Count**, and **Full Command Line**.
+- Configurable periodic auto-refresh (1s, 2s, 5s) plus manual **⟲ Refresh Now**.
+- Instant search filter and state filter (`All States`, `Running`, `Sleeping`, `Stopped`, `Zombie`), with an optional **Hide Kernel Threads** toggle.
+- Interactive column sorting: click any header (CPU %, Memory, PID, etc.) to sort ascending or descending.
+
+### 14. OS Architecture Distinction: Resource Metrics vs. Syscall Statistics
+OScope explicitly contrasts two foundational paradigms in operating system observability:
+- **Process Resource Metrics** (*Sampling-Based / Macroscopic*): Periodic snapshots of OS kernel scheduler and memory manager structures (`task_struct`, `mm_struct`). Measures macroscopic state (CPU %, physical RSS in RAM, virtual address space, run-queue states).
+- **System Call Statistics** (*Event-Driven / Microscopic*): Continuous, deterministic trace via kernel `ptrace`. Measures microscopic events across the user-space to kernel-space boundary (syscall frequencies, argument payloads, file descriptors, errno codes).
+
+### 15. Direct Attach & Trace Syscalls (`strace -p <PID>`)
+- Select any active process in the dashboard and click **"🔍 Attach & Trace Syscalls (PID: X)"** or double-click the row.
+- OScope automatically jumps to the **Live Monitor** tab and initiates tracing on the running process.
+- **Clean Detachment**: When monitoring is stopped, OScope sends `SIGINT` to `strace`, detaching cleanly without terminating the monitored process.
+- **Linux Security (Yama LSM) Diagnostics**: Provides clear, plain-English guidance if Linux Yama restricts attaching across unprivileged boundaries (`kernel.yama.ptrace_scope = 1`).
+
 ---
 
 ## 🏗️ Project Architecture
 
 ```text
-                                REAL Linux Process Group
-                                           │
-                                    strace [-f]
-                                           │
-                                       tracer.py
+                                 REAL Linux Process Group
+                                            │
+                                     strace [-f]
+                                            │
+                                        tracer.py
                         ┌──────────────────┴──────────────────┐
                         ▼                                     ▼
                 RawOutputWindow                         parser.py
@@ -79,12 +98,16 @@ Categorizes system calls according to Operating System fundamentals:
                                                               ▼
                                                    process_tree.py & statistics.py
                                                               │
-                                                              ▼
-                                                  Tkinter GUI (gui.py)
-                   ┌─────────────────┬───────────────────┬─────────────────┬─────────────────┐
-                   ▼                 ▼                   ▼                 ▼                 ▼
-             Live Monitor     Live Category      Failure Analysis    Process Tree     Session History
-              (with PID)       Bar Chart        (Errno Breakdown)     Hierarchy        & Comparison
+               Linux /proc Virtual FS                         ▼
+                         │                        Tkinter GUI (gui.py)
+                         ▼             ┌──────────────────────┼──────────────────────┐
+                process_dashboard.py   ▼                      ▼                      ▼
+                         │        Live Monitor      Processes & Resources     Live Category
+                         └───────► (with PID)       (Procfs & CPU/RAM)          Bar Chart
+                                       │                      │                      │
+                                       ▼                      ▼                      ▼
+                                Failure Analysis        Process Tree          Session History
+                                (Errno Breakdown)         Hierarchy             & Comparison
 ```
 
 ---
@@ -114,7 +137,7 @@ wsl python3 gui.py
 
 ### Running the Automated Verification Suite
 
-To run the end-to-end multi-command verification suite testing all 9 phases:
+To run the end-to-end multi-command verification suite testing all phases, working directory execution, process dashboard inspection, and attach-to-PID flows:
 
 ```bash
 wsl python3 gui.py --test
@@ -126,8 +149,9 @@ wsl python3 gui.py --test
 
 | File | Description |
 | :--- | :--- |
-| `gui.py` | Main application window, tabs, canvas charts, and event coordination. |
-| `tracer.py` | Subprocess controller managing `strace [-f]` execution and process group cleanup. |
+| `gui.py` | Main application window, tabbed notebook, canvas charts, process table, and event coordination. |
+| `process_dashboard.py` | Linux `/proc` Virtual File System collector, CPU/memory metric engine, and process lineage inspector. |
+| `tracer.py` | Subprocess controller managing `strace [-f] [-p PID]` execution, attach/detach handling, and process group cleanup. |
 | `parser.py` | High-performance regex parser extracting PIDs, syscall names, arguments, and return values. |
 | `detail_parser.py` | Parameter extractor resolving paths, flags, file descriptors, and byte counts. |
 | `process_tree.py` | Process hierarchy tracker mapping parent-child relationships and process lifecycles. |

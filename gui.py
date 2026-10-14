@@ -26,6 +26,7 @@ from statistics import is_failed_syscall, compute_statistics
 from syscall_info import get_syscall_info
 from failure_analysis import compute_failure_analysis, explain_errno
 from process_tree import ProcessTreeTracker, ProcessNode
+from process_dashboard import ProcessCollector, DISTINCTION_EXPLANATION, STATE_DESCRIPTIONS
 
 
 # -----------------------------------------------------------------
@@ -200,6 +201,20 @@ class SyscallMonitorApp:
         self.working_dir_var = tk.StringVar(value=self.default_cwd)
         self.current_cwd = self.default_cwd
 
+        # Enhancement A: Live Process & Resource Dashboard
+        self.proc_collector = ProcessCollector()
+        self.proc_auto_refresh_var = tk.BooleanVar(value=True)
+        self.proc_refresh_interval_var = tk.StringVar(value="2s")
+        self.proc_hide_kernel_var = tk.BooleanVar(value=True)
+        self.proc_search_var = tk.StringVar()
+        self.proc_search_var.trace_add("write", lambda *args: self._on_proc_filter_changed())
+        self.proc_state_filter_var = tk.StringVar(value="All States")
+        self.proc_sort_col = "Memory (RSS)"
+        self.proc_sort_reverse = True
+        self._proc_data = []
+        self._selected_proc_pid = None
+        self._proc_refresh_timer = None
+
         # Master dataset (persists regardless of table filters)
         self.records = []
         self.total_count = 0
@@ -299,12 +314,14 @@ class SyscallMonitorApp:
         self.notebook.pack(fill="both", expand=True, padx=10, pady=(4, 6))
 
         self.tab_monitor = ttk.Frame(self.notebook)
+        self.tab_procs = ttk.Frame(self.notebook)
         self.tab_visual = ttk.Frame(self.notebook)
         self.tab_failures = ttk.Frame(self.notebook)
         self.tab_ptree = ttk.Frame(self.notebook)
         self.tab_history = ttk.Frame(self.notebook)
 
         self.notebook.add(self.tab_monitor, text="  Live Monitor  ")
+        self.notebook.add(self.tab_procs, text="  Processes & Resources  ")
         self.notebook.add(self.tab_visual, text="  Live Visualization  ")
         self.notebook.add(self.tab_failures, text="  Failure Analysis  ")
         self.notebook.add(self.tab_ptree, text="  Process Tree  ")
@@ -312,6 +329,7 @@ class SyscallMonitorApp:
         self.notebook.bind("<<NotebookTabChanged>>", lambda event: self._on_tab_changed())
 
         self._build_monitor_tab()
+        self._build_procs_tab()
         self._build_visual_tab()
         self._build_failures_tab()
         self._build_ptree_tab()
@@ -454,6 +472,487 @@ class SyscallMonitorApp:
             lbl = ttk.Label(stats_frame, text=f"{cat_name}: 0")
             lbl.grid(row=r, column=c, padx=12, pady=2, sticky="w")
             self.lbl_stat_cats[cat_name] = lbl
+
+    # -----------------------------------------------------------------
+    # Enhancement A: Live Process & Resource Dashboard
+    # -----------------------------------------------------------------
+    def _build_procs_tab(self):
+        """
+        Builds the Live Process & Resource Dashboard tab:
+        - OS Architecture Distinction banner (Resource Metrics vs. Syscall Stats)
+        - Search, state filter, kernel thread filter, and periodic auto-refresh controls
+        - Sortable process table (PID, PPID, Name, User, State, CPU %, RSS Memory, Threads, Command)
+        - Deep process inspector (State explanation, memory breakdown, lineage hierarchy, children)
+        - One-click Attach & Trace Syscalls action
+        """
+        # 1. OS Architecture Distinction Callout Banner
+        banner_frame = ttk.LabelFrame(
+            self.tab_procs,
+            text=" Operating System Architecture — Distinction: Resource Metrics vs. Syscall Statistics ",
+            padding=8
+        )
+        banner_frame.pack(fill="x", padx=8, pady=(6, 4))
+
+        col_left = ttk.Frame(banner_frame)
+        col_left.pack(side="left", fill="both", expand=True, padx=(0, 8))
+
+        lbl_res_title = ttk.Label(
+            col_left,
+            text="📊 Process Resource Metrics (Sampling / Snapshot)",
+            font=("TkDefaultFont", 9, "bold"),
+            foreground="#0066cc"
+        )
+        lbl_res_title.pack(anchor="w")
+
+        lbl_res_desc = ttk.Label(
+            col_left,
+            text="• Source: Linux Virtual File System (/proc/[pid]/status, stat, /proc/stat)\n"
+                 "• Nature: Macroscopic periodic snapshots of kernel scheduler state & physical/virtual memory\n"
+                 "• Key Metrics: CPU %, Physical Memory (VmRSS), Virtual Space (VmSize), Threads, State (R/S/D/Z)",
+            font=("TkDefaultFont", 8),
+            justify="left"
+        )
+        lbl_res_desc.pack(anchor="w", pady=(2, 0))
+
+        col_right = ttk.Frame(banner_frame)
+        col_right.pack(side="right", fill="both", expand=True, padx=(8, 0))
+
+        lbl_sys_title = ttk.Label(
+            col_right,
+            text="⚡ System Call Statistics (Event-Driven / Continuous Trace)",
+            font=("TkDefaultFont", 9, "bold"),
+            foreground="#2e7d32"
+        )
+        lbl_sys_title.pack(anchor="w")
+
+        lbl_sys_desc = ttk.Label(
+            col_right,
+            text="• Source: Linux kernel ptrace subsystem via strace\n"
+                 "• Nature: Microscopic continuous stream intercepting individual user-kernel mode transitions\n"
+                 "• Key Metrics: Exact syscall frequency, execution latency, errno failures, argument payloads",
+            font=("TkDefaultFont", 8),
+            justify="left"
+        )
+        lbl_sys_desc.pack(anchor="w", pady=(2, 0))
+
+        # 2. Controls & Sampling Bar
+        ctrl_frame = ttk.LabelFrame(self.tab_procs, text=" Process Filters & Sampling Controls ", padding=6)
+        ctrl_frame.pack(fill="x", padx=8, pady=4)
+
+        ttk.Label(ctrl_frame, text="Search:").pack(side="left", padx=(0, 4))
+        ent_search = ttk.Entry(ctrl_frame, textvariable=self.proc_search_var, width=16)
+        ent_search.pack(side="left", padx=4)
+
+        ttk.Label(ctrl_frame, text="State:").pack(side="left", padx=(6, 4))
+        state_choices = [
+            "All States",
+            "R (Running)",
+            "S (Sleeping)",
+            "D (Disk Sleep)",
+            "T (Stopped)",
+            "Z (Zombie)"
+        ]
+        combo_state = ttk.Combobox(
+            ctrl_frame,
+            textvariable=self.proc_state_filter_var,
+            values=state_choices,
+            state="readonly",
+            width=13
+        )
+        combo_state.pack(side="left", padx=4)
+        combo_state.bind("<<ComboboxSelected>>", lambda event: self._refresh_process_table())
+
+        chk_kernel = ttk.Checkbutton(
+            ctrl_frame,
+            text="Hide Kernel Threads",
+            variable=self.proc_hide_kernel_var,
+            command=self._refresh_process_table
+        )
+        chk_kernel.pack(side="left", padx=(6, 4))
+
+        chk_auto = ttk.Checkbutton(
+            ctrl_frame,
+            text="Auto-Refresh",
+            variable=self.proc_auto_refresh_var,
+            command=self._on_proc_auto_refresh_toggled
+        )
+        chk_auto.pack(side="left", padx=(8, 4))
+
+        ttk.Label(ctrl_frame, text="Interval:").pack(side="left", padx=(4, 2))
+        combo_interval = ttk.Combobox(
+            ctrl_frame,
+            textvariable=self.proc_refresh_interval_var,
+            values=["1s", "2s", "5s"],
+            state="readonly",
+            width=4
+        )
+        combo_interval.pack(side="left", padx=2)
+
+        btn_refresh = ttk.Button(ctrl_frame, text="⟲ Refresh Now", command=self._refresh_process_table)
+        btn_refresh.pack(side="left", padx=6)
+
+        self.lbl_proc_count = ttk.Label(ctrl_frame, text="Active Processes: 0 | Displayed: 0", foreground="#555555")
+        self.lbl_proc_count.pack(side="right", padx=8)
+
+        # 3. Main Running Process Table
+        table_frame = ttk.LabelFrame(self.tab_procs, text=" Running Processes (Sampled from Linux /proc) ", padding=6)
+        table_frame.pack(fill="both", expand=True, padx=8, pady=4)
+
+        cols = ("PID", "PPID", "Name", "User", "State", "CPU %", "Memory (RSS)", "Threads", "Command")
+        self.proc_table = ttk.Treeview(table_frame, columns=cols, show="headings", selectmode="browse")
+
+        self.proc_table.heading("PID", text="PID", command=lambda: self._sort_proc_table("PID"))
+        self.proc_table.heading("PPID", text="PPID", command=lambda: self._sort_proc_table("PPID"))
+        self.proc_table.heading("Name", text="Name", command=lambda: self._sort_proc_table("Name"))
+        self.proc_table.heading("User", text="User", command=lambda: self._sort_proc_table("User"))
+        self.proc_table.heading("State", text="State", command=lambda: self._sort_proc_table("State"))
+        self.proc_table.heading("CPU %", text="CPU %", command=lambda: self._sort_proc_table("CPU %"))
+        self.proc_table.heading("Memory (RSS)", text="Memory (RSS)", command=lambda: self._sort_proc_table("Memory (RSS)"))
+        self.proc_table.heading("Threads", text="Threads", command=lambda: self._sort_proc_table("Threads"))
+        self.proc_table.heading("Command", text="Command / Binary", command=lambda: self._sort_proc_table("Command"))
+
+        self.proc_table.column("PID", width=65, minwidth=50, anchor="center")
+        self.proc_table.column("PPID", width=65, minwidth=50, anchor="center")
+        self.proc_table.column("Name", width=140, minwidth=100, anchor="w")
+        self.proc_table.column("User", width=85, minwidth=70, anchor="center")
+        self.proc_table.column("State", width=55, minwidth=45, anchor="center")
+        self.proc_table.column("CPU %", width=75, minwidth=60, anchor="center")
+        self.proc_table.column("Memory (RSS)", width=105, minwidth=85, anchor="e")
+        self.proc_table.column("Threads", width=65, minwidth=50, anchor="center")
+        self.proc_table.column("Command", width=290, minwidth=150, anchor="w")
+
+        p_scrolly = ttk.Scrollbar(table_frame, orient="vertical", command=self.proc_table.yview)
+        p_scrollx = ttk.Scrollbar(table_frame, orient="horizontal", command=self.proc_table.xview)
+        self.proc_table.configure(yscrollcommand=p_scrolly.set, xscrollcommand=p_scrollx.set)
+
+        self.proc_table.grid(row=0, column=0, sticky="nsew")
+        p_scrolly.grid(row=0, column=1, sticky="ns")
+        p_scrollx.grid(row=1, column=0, sticky="ew")
+
+        table_frame.grid_rowconfigure(0, weight=1)
+        table_frame.grid_columnconfigure(0, weight=1)
+
+        self.proc_table.bind("<<TreeviewSelect>>", self._on_proc_selected)
+        self.proc_table.bind("<Double-1>", lambda event: self._attach_and_trace_pid())
+
+        # 4. Selected Process Deep Inspector & Lineage Panel
+        inspector_frame = ttk.LabelFrame(
+            self.tab_procs,
+            text=" Selected Process Inspector, Memory Architecture & Lineage ",
+            padding=8
+        )
+        inspector_frame.pack(fill="x", padx=8, pady=(2, 6))
+
+        info_grid = ttk.Frame(inspector_frame)
+        info_grid.pack(side="left", fill="both", expand=True)
+
+        self.lbl_proc_inspect_summary = ttk.Label(
+            info_grid,
+            text="Selected Process: None (select a process from the table above to inspect)",
+            font=("TkDefaultFont", 9, "bold"),
+            foreground="#0066cc"
+        )
+        self.lbl_proc_inspect_summary.pack(anchor="w", pady=(0, 2))
+
+        self.lbl_proc_inspect_state = ttk.Label(
+            info_grid,
+            text="State: -",
+            font=("TkDefaultFont", 8)
+        )
+        self.lbl_proc_inspect_state.pack(anchor="w", pady=1)
+
+        self.lbl_proc_inspect_mem = ttk.Label(
+            info_grid,
+            text="Memory Profile: -",
+            font=("TkDefaultFont", 8)
+        )
+        self.lbl_proc_inspect_mem.pack(anchor="w", pady=1)
+
+        self.lbl_proc_inspect_lineage = ttk.Label(
+            info_grid,
+            text="Process Lineage (Ancestry): -",
+            font=("TkDefaultFont", 8, "italic")
+        )
+        self.lbl_proc_inspect_lineage.pack(anchor="w", pady=1)
+
+        self.lbl_proc_inspect_children = ttk.Label(
+            info_grid,
+            text="Child Processes: -",
+            font=("TkDefaultFont", 8)
+        )
+        self.lbl_proc_inspect_children.pack(anchor="w", pady=(1, 0))
+
+        # Action Button Frame on Right
+        action_frame = ttk.Frame(inspector_frame, padding=6)
+        action_frame.pack(side="right", padx=8, pady=4)
+
+        self.btn_attach_pid = ttk.Button(
+            action_frame,
+            text="🔍 Attach & Trace Syscalls",
+            command=self._attach_and_trace_pid,
+            state="disabled"
+        )
+        self.btn_attach_pid.pack(pady=4)
+
+        lbl_hint = ttk.Label(
+            action_frame,
+            text="(Jumps to Live Monitor & attaches strace -p)",
+            font=("TkDefaultFont", 7),
+            foreground="#777777"
+        )
+        lbl_hint.pack()
+
+    def _on_proc_auto_refresh_toggled(self):
+        """Toggles periodic auto-refresh for the process dashboard."""
+        if self.proc_auto_refresh_var.get():
+            self._schedule_process_refresh()
+        else:
+            if self._proc_refresh_timer:
+                try:
+                    self.root.after_cancel(self._proc_refresh_timer)
+                except Exception:
+                    pass
+                self._proc_refresh_timer = None
+
+    def _schedule_process_refresh(self):
+        """Schedules the next process refresh tick if the dashboard tab is active."""
+        if self._proc_refresh_timer:
+            try:
+                self.root.after_cancel(self._proc_refresh_timer)
+            except Exception:
+                pass
+            self._proc_refresh_timer = None
+
+        if not self.proc_auto_refresh_var.get():
+            return
+
+        try:
+            current_tab = self.notebook.tab(self.notebook.select(), "text").strip()
+            if "Processes & Resources" not in current_tab:
+                return
+        except Exception:
+            return
+
+        interval_str = self.proc_refresh_interval_var.get()
+        delay_ms = 2000
+        if interval_str == "1s":
+            delay_ms = 1000
+        elif interval_str == "5s":
+            delay_ms = 5000
+
+        self._proc_refresh_timer = self.root.after(delay_ms, self._process_refresh_tick)
+
+    def _process_refresh_tick(self):
+        """Tick handler: refreshes the table and schedules the next tick."""
+        self._proc_refresh_timer = None
+        try:
+            current_tab = self.notebook.tab(self.notebook.select(), "text").strip()
+            if "Processes & Resources" in current_tab:
+                self._refresh_process_table()
+                self._schedule_process_refresh()
+        except Exception:
+            pass
+
+    def _sort_proc_table(self, col_name: str):
+        """Sorts the process table by the selected column name."""
+        if self.proc_sort_col == col_name:
+            self.proc_sort_reverse = not self.proc_sort_reverse
+        else:
+            self.proc_sort_col = col_name
+            self.proc_sort_reverse = col_name in ("CPU %", "Memory (RSS)", "Threads", "PID", "PPID")
+
+        self._refresh_process_table()
+
+    def _on_proc_filter_changed(self):
+        """Handles live search query input."""
+        self._refresh_process_table()
+
+    def _refresh_process_table(self):
+        """
+        Gathers running processes from /proc, filters them according to active controls,
+        sorts them, and updates the Treeview display.
+        """
+        if not hasattr(self, "proc_table"):
+            return
+
+        all_procs = self.proc_collector.get_process_list()
+        self._proc_data = all_procs
+
+        query = self.proc_search_var.get().strip().lower()
+        state_choice = self.proc_state_filter_var.get()
+        state_letter = state_choice.split()[0] if state_choice != "All States" else ""
+        hide_kernel = self.proc_hide_kernel_var.get()
+
+        filtered = []
+        for p in all_procs:
+            # Hide kernel threads if enabled
+            if hide_kernel:
+                name = p["name"]
+                cmd = p["cmdline"]
+                rss = p["memory_rss_mb"]
+                if rss == 0.0 and (name.startswith("kworker") or name.startswith("ksoftirqd") or
+                                   name.startswith("rcu_") or cmd.startswith("[")):
+                    continue
+
+            # State code filter
+            if state_letter and p["state"] != state_letter:
+                continue
+
+            # Text search filter
+            if query:
+                pid_str = str(p["pid"])
+                ppid_str = str(p["ppid"])
+                name_str = p["name"].lower()
+                user_str = p["user"].lower()
+                cmd_str = p["cmdline"].lower()
+                if (query not in pid_str and query not in ppid_str and
+                    query not in name_str and query not in user_str and query not in cmd_str):
+                    continue
+
+            filtered.append(p)
+
+        # Sort the filtered list
+        sk = self.proc_sort_col
+        rev = self.proc_sort_reverse
+        if sk == "PID":
+            filtered.sort(key=lambda p: p["pid"], reverse=rev)
+        elif sk == "PPID":
+            filtered.sort(key=lambda p: p["ppid"], reverse=rev)
+        elif sk == "Name":
+            filtered.sort(key=lambda p: p["name"].lower(), reverse=rev)
+        elif sk == "User":
+            filtered.sort(key=lambda p: p["user"].lower(), reverse=rev)
+        elif sk == "State":
+            filtered.sort(key=lambda p: p["state"], reverse=rev)
+        elif sk == "CPU %":
+            filtered.sort(key=lambda p: p["cpu_percent"], reverse=rev)
+        elif sk == "Memory (RSS)":
+            filtered.sort(key=lambda p: p["memory_rss_mb"], reverse=rev)
+        elif sk == "Threads":
+            filtered.sort(key=lambda p: p["threads"], reverse=rev)
+        elif sk == "Command":
+            filtered.sort(key=lambda p: p["cmdline"].lower(), reverse=rev)
+
+        for item in self.proc_table.get_children():
+            self.proc_table.delete(item)
+
+        for p in filtered:
+            self.proc_table.insert(
+                "",
+                "end",
+                iid=str(p["pid"]),
+                values=(
+                    p["pid"],
+                    p["ppid"],
+                    p["name"],
+                    p["user"],
+                    p["state"],
+                    f"{p['cpu_percent']:.1f}%",
+                    f"{p['memory_rss_mb']:.2f} MB",
+                    p["threads"],
+                    p["cmdline"]
+                )
+            )
+
+        self.lbl_proc_count.config(text=f"Active Processes: {len(all_procs)} | Displayed: {len(filtered)}")
+
+        # Preserve selection if the selected PID is still present
+        if self._selected_proc_pid and str(self._selected_proc_pid) in self.proc_table.get_children():
+            self.proc_table.selection_set(str(self._selected_proc_pid))
+            self._refresh_proc_inspector(self._selected_proc_pid)
+        elif self._selected_proc_pid:
+            self.lbl_proc_inspect_summary.config(
+                text=f"Process (PID {self._selected_proc_pid}) has terminated.",
+                foreground="#cc0000"
+            )
+            self.btn_attach_pid.config(state="disabled", text="🔍 Attach & Trace Syscalls")
+
+    def _on_proc_selected(self, event=None):
+        """Updates inspector panel when a process row is selected."""
+        selected = self.proc_table.selection()
+        if not selected:
+            self.btn_attach_pid.config(state="disabled", text="🔍 Attach & Trace Syscalls")
+            return
+        pid = int(selected[0])
+        self._selected_proc_pid = pid
+        self.btn_attach_pid.config(
+            state="normal" if not self.is_monitoring else "disabled",
+            text=f"🔍 Attach & Trace Syscalls (PID: {pid})"
+        )
+        self._refresh_proc_inspector(pid)
+
+    def _refresh_proc_inspector(self, pid: int):
+        """Gathers deep metrics from /proc for the selected PID and updates the inspector."""
+        if not hasattr(self, "lbl_proc_inspect_summary"):
+            return
+
+        details = self.proc_collector.get_process_details(pid)
+        if not details:
+            self.lbl_proc_inspect_summary.config(
+                text=f"Process (PID {pid}) has terminated or exited.",
+                foreground="#cc0000"
+            )
+            self.lbl_proc_inspect_state.config(text="State: Terminated")
+            self.lbl_proc_inspect_mem.config(text="Memory Profile: Released")
+            self.lbl_proc_inspect_lineage.config(text="Process Lineage: N/A")
+            self.lbl_proc_inspect_children.config(text="Child Processes: None")
+            self.btn_attach_pid.config(state="disabled", text="🔍 Attach & Trace Syscalls")
+            return
+
+        self.lbl_proc_inspect_summary.config(
+            text=f"Selected: PID {details['pid']} ({details['name']}) | User: {details['user']} | Parent PPID: {details['ppid']}",
+            foreground="#0066cc"
+        )
+        self.lbl_proc_inspect_state.config(text=f"State: {details['state_desc']}")
+
+        rss_mb = details["vm_rss_kb"] / 1024.0
+        vmsize_mb = details["vm_size_kb"] / 1024.0
+        data_mb = details["vm_data_kb"] / 1024.0
+        stk_kb = details["vm_stk_kb"]
+        self.lbl_proc_inspect_mem.config(
+            text=f"Memory Profile: Physical RAM (RSS): {rss_mb:.2f} MB | Virtual Space (VmSize): {vmsize_mb:.2f} MB | Data Seg: {data_mb:.2f} MB | Stack: {stk_kb} kB"
+        )
+
+        ancestors = [f"{a['name']} ({a['pid']})" for a in details["lineage"]]
+        ancestors.append(f"{details['name']} ({pid})")
+        lineage_str = " ➔ ".join(ancestors) if ancestors else f"{details['name']} ({pid})"
+        self.lbl_proc_inspect_lineage.config(text=f"Process Lineage (Ancestry): {lineage_str}")
+
+        if details["children"]:
+            children_str = ", ".join([f"{c['name']} (PID {c['pid']})" for c in details["children"]])
+        else:
+            children_str = "None (No active child processes detected)"
+        self.lbl_proc_inspect_children.config(text=f"Child Processes: {children_str}")
+
+    def _attach_and_trace_pid(self):
+        """
+        Transfers the selected PID to the Live Monitor tab and immediately launches
+        system call tracing on that running process using strace -p <PID>.
+        """
+        if not self._selected_proc_pid:
+            selected = self.proc_table.selection()
+            if selected:
+                self._selected_proc_pid = int(selected[0])
+
+        if not self._selected_proc_pid:
+            messagebox.showinfo("Select Process", "Please select a process from the table to trace.")
+            return
+
+        if self.is_monitoring:
+            messagebox.showwarning(
+                "Monitoring Active",
+                "A monitoring session is currently running. Please stop it first before attaching to a new process."
+            )
+            return
+
+        pid = self._selected_proc_pid
+        target_str = f"PID: {pid}"
+        self.cmd_entry.delete(0, tk.END)
+        self.cmd_entry.insert(0, target_str)
+
+        # Switch to Live Monitor tab and initiate monitoring
+        self.notebook.select(self.tab_monitor)
+        self.start_monitoring()
 
     def _build_visual_tab(self):
         """Builds Phase 3 Live Visualization Panel with Category Distribution Bar Chart."""
@@ -610,7 +1109,10 @@ class SyscallMonitorApp:
     def _on_tab_changed(self):
         try:
             selected_tab = self.notebook.tab(self.notebook.select(), "text").strip()
-            if "Visualization" in selected_tab:
+            if "Processes & Resources" in selected_tab:
+                self._refresh_process_table()
+                self._schedule_process_refresh()
+            elif "Visualization" in selected_tab:
                 self.root.after(20, self._draw_chart)
             elif "Failure" in selected_tab:
                 self._refresh_failures_ui()
@@ -1518,6 +2020,24 @@ class SyscallMonitorApp:
             messagebox.showwarning("Empty Command", "Please enter a valid command to trace.")
             return
 
+        # Check if target is an attached PID (e.g. 'PID: 1234' or purely numeric)
+        target_pid_num = None
+        if cmd.lower().startswith("pid:"):
+            try:
+                target_pid_num = int(cmd.split(":", 1)[1].strip())
+            except ValueError:
+                pass
+        elif cmd.isdigit():
+            target_pid_num = int(cmd)
+
+        if target_pid_num is not None:
+            if not os.path.exists(f"/proc/{target_pid_num}"):
+                messagebox.showerror(
+                    "Process Not Found",
+                    f"Process ID {target_pid_num} does not exist or has already terminated."
+                )
+                return
+
         # Validate and resolve working directory
         target_cwd = self._resolve_directory_path(self.working_dir_var.get())
         if not os.path.isdir(target_cwd):
@@ -1551,6 +2071,8 @@ class SyscallMonitorApp:
         self.dir_entry.config(state="disabled")
         self.btn_browse_dir.config(state="disabled")
         self.btn_reset_dir.config(state="disabled")
+        if hasattr(self, "btn_attach_pid"):
+            self.btn_attach_pid.config(state="disabled")
         self.lbl_status.config(text="Status: Monitoring...", foreground="#0066cc")
 
         # --- Stage 6.1: Open a FRESH raw output window for this session ---
@@ -1562,6 +2084,19 @@ class SyscallMonitorApp:
             def on_line(raw_line):
                 # Feed the raw line to the dedicated terminal-style window
                 self._raw_window.append_line(raw_line)
+
+                # Check for Linux Yama LSM security restriction when attaching to existing PID
+                if "Operation not permitted" in raw_line and "ptrace" in raw_line:
+                    alert_msg = (
+                        "\n" + "=" * 60 + "\n"
+                        "[!] LINUX SECURITY RESTRICTION (Yama LSM):\n"
+                        "    Attaching to running processes was restricted (kernel.yama.ptrace_scope = 1).\n"
+                        "    To enable attaching to running processes, run in WSL terminal:\n"
+                        "      echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope\n"
+                        + "=" * 60 + "\n"
+                    )
+                    self._raw_window.append_line(alert_msg)
+                    self.queue.put(("error", "Attach Restricted (Yama LSM)"))
 
                 # Phase 8: Track process events (attaches, exits, signals)
                 self.process_tree_tracker.handle_raw_line(raw_line)
@@ -1606,6 +2141,8 @@ class SyscallMonitorApp:
             self.dir_entry.config(state="normal")
             self.btn_browse_dir.config(state="normal")
             self.btn_reset_dir.config(state="normal")
+            if hasattr(self, "btn_attach_pid"):
+                self.btn_attach_pid.config(state="normal" if self._selected_proc_pid else "disabled")
             self._save_current_session("Stopped (Incomplete)")
             self._refresh_export_button_state()
             self._refresh_ptree_ui()
@@ -1710,6 +2247,8 @@ class SyscallMonitorApp:
                 self.dir_entry.config(state="normal")
                 self.btn_browse_dir.config(state="normal")
                 self.btn_reset_dir.config(state="normal")
+                if hasattr(self, "btn_attach_pid"):
+                    self.btn_attach_pid.config(state="normal" if self._selected_proc_pid else "disabled")
                 is_stopped = (self.lbl_status.cget("text") == "Status: Stopped")
                 status = "Stopped (Incomplete)" if is_stopped else "Completed"
                 if not is_stopped:
@@ -1727,6 +2266,8 @@ class SyscallMonitorApp:
                 self.dir_entry.config(state="normal")
                 self.btn_browse_dir.config(state="normal")
                 self.btn_reset_dir.config(state="normal")
+                if hasattr(self, "btn_attach_pid"):
+                    self.btn_attach_pid.config(state="normal" if self._selected_proc_pid else "disabled")
                 self.lbl_status.config(text=f"Status: Error ({payload})", foreground="#cc0000")
                 self._save_current_session("Error (Incomplete)")
                 self._refresh_export_button_state()
@@ -2123,10 +2664,97 @@ class SyscallMonitorApp:
                                 assert "Stopped" in last_sess["status"]
                                 print("[✓] Stop monitoring cleanly terminated the process group.")
 
-                                print("\n" + "=" * 60)
-                                print("[✓] ALL OScope Phases 1–9 & Working Directory Tests Passed Successfully!")
-                                print("============================================================")
-                                self.root.after(400, self.root.destroy)
+                                # -----------------------------------------------------
+                                # Enhancement A: Live Process & Resource Dashboard Tests
+                                # -----------------------------------------------------
+                                print("\n[*] Enhancement A Test: Verifying Live Process & Resource Dashboard...")
+
+                                # 1. /proc Process Collector Verification
+                                procs = self.proc_collector.get_process_list()
+                                assert len(procs) > 0, "ProcessCollector should discover running processes from /proc"
+                                p0 = procs[0]
+                                required_keys = {"pid", "ppid", "name", "user", "state", "cpu_percent", "memory_rss_mb", "threads", "cmdline"}
+                                assert required_keys.issubset(set(p0.keys())), f"Missing keys in process record: {p0.keys()}"
+                                print(f"[✓] ProcessCollector scanned /proc successfully: {len(procs)} active processes discovered.")
+
+                                # 2. Deep Process Inspector & Lineage Verification
+                                my_pid = os.getpid()
+                                details = self.proc_collector.get_process_details(my_pid)
+                                assert details is not None, f"Failed to get process details for PID {my_pid}"
+                                assert details["pid"] == my_pid, "PID mismatch in process details"
+                                assert details["vm_rss_kb"] > 0, "VmRSS should be > 0"
+                                assert "state_desc" in details and details["state_desc"], "State description should be populated"
+                                assert isinstance(details["lineage"], list), "Lineage should be a list"
+                                print(f"[✓] Deep process inspection verified for PID {my_pid}: State '{details['state_code']}', RSS {details['vm_rss_kb']} kB, Lineage depth {len(details['lineage'])}.")
+
+                                # 3. Metrics Distinction Architecture Constants
+                                assert "resource_metrics" in DISTINCTION_EXPLANATION, "Resource metrics distinction metadata missing"
+                                assert "syscall_statistics" in DISTINCTION_EXPLANATION, "Syscall statistics distinction metadata missing"
+                                print("[✓] Process Resource Metrics vs. Syscall Statistics architectural distinction verified.")
+
+                                # 4. Dashboard UI Components Verification
+                                self.notebook.select(self.tab_procs)
+                                self._refresh_process_table()
+                                table_rows = self.proc_table.get_children()
+                                assert len(table_rows) > 0, "Process Table UI should contain process rows"
+
+                                # Select first process row and verify inspector updates
+                                first_pid = int(table_rows[0])
+                                self.proc_table.selection_set(str(first_pid))
+                                self._on_proc_selected()
+                                assert str(self.btn_attach_pid.cget("state")) == "normal", "Attach button should be enabled"
+                                assert str(first_pid) in self.btn_attach_pid.cget("text"), "Attach button text should contain target PID"
+                                assert str(first_pid) in self.lbl_proc_inspect_summary.cget("text"), "Inspector summary should reflect selected PID"
+
+                                # Test column sorting
+                                self._sort_proc_table("PID")
+                                assert self.proc_sort_col == "PID", "Sort column should be PID"
+
+                                # Test search filter
+                                self.proc_search_var.set("python")
+                                self._refresh_process_table()
+                                filtered_rows = self.proc_table.get_children()
+                                assert len(filtered_rows) > 0, "Search for 'python' should return at least 1 process"
+                                self.proc_search_var.set("")
+                                self._refresh_process_table()
+                                print(f"[✓] Process table UI, sorting, search filtering, and inspector panel verified with {len(table_rows)} items.")
+
+                                # 5. Direct Attach & Trace Syscalls Verification
+                                print("[*] Testing Attach & Trace Syscalls (strace -p <PID>) with clean detachment...")
+                                import subprocess
+                                helper_code = (
+                                    "import ctypes, time, os\n"
+                                    "libc = ctypes.CDLL('libc.so.6')\n"
+                                    "libc.prctl(0x59616d61, -1, 0, 0, 0)\n"
+                                    "print('READY', flush=True)\n"
+                                    "for _ in range(50):\n"
+                                    "    time.sleep(0.1)\n"
+                                )
+                                helper = subprocess.Popen(["python3", "-c", helper_code], stdout=subprocess.PIPE, text=True)
+                                _ = helper.stdout.readline()
+                                h_pid = helper.pid
+
+                                self._selected_proc_pid = h_pid
+                                self._attach_and_trace_pid()
+                                assert self.is_monitoring is True, "Monitoring should be active after attaching"
+                                assert self.cmd_entry.get() == f"PID: {h_pid}", "Command entry should show target PID"
+
+                                def step_detach_verify():
+                                    self.stop_monitoring()
+                                    assert self.is_monitoring is False, "Monitoring should be stopped"
+                                    # Target process must still be running (not terminated by strace detach!)
+                                    is_alive = (helper.poll() is None)
+                                    assert is_alive is True, "Target process should remain alive after strace detaches cleanly"
+                                    helper.terminate()
+                                    helper.wait()
+                                    print(f"[✓] Attach & Trace Syscalls verified: Attached to PID {h_pid}, cleanly detached without terminating target process.")
+
+                                    print("\n" + "=" * 60)
+                                    print("[✓] ALL OScope Phases 1–9, Working Directory & Enhancement A Tests Passed Successfully!")
+                                    print("============================================================")
+                                    self.root.after(400, self.root.destroy)
+
+                                self.root.after(700, step_detach_verify)
 
                             self.root.after(500, do_stop_check)
 

@@ -21,21 +21,47 @@ class TraceSession:
     def __init__(self):
         self.process = None
         self._stopped = False
+        self.is_attached = False
+        self.target_pid = None
 
-    def start(self, command: str, on_line=None, follow_children: bool = False, cwd: str = None):
+    def start(self, command: str = "", on_line=None, follow_children: bool = False, cwd: str = None, pid: int = None):
         """
         Launches strace and reads lines from stderr until completion or stop() is called.
+        If pid is provided (or if command is like 'PID: 1234' or purely numeric),
+        attaches strace directly to that running process using -p <PID>.
         If follow_children is True, attaches -f flag to strace to trace child processes.
         If cwd is provided, the command and strace execute inside that directory.
         """
         self._stopped = False
-        target_cwd = cwd if (cwd and os.path.isdir(cwd)) else None
-        display_cwd = target_cwd or os.getcwd()
-        print(f"[+] Target command: {command} (cwd={display_cwd}, follow_children={follow_children})")
-        print("[+] Launching strace...\n" + "=" * 60)
+        self.is_attached = False
+        self.target_pid = None
+
+        # Detect PID attachment mode from parameter or command string
+        target_pid = pid
+        clean_cmd = (command or "").strip()
+        if target_pid is None and clean_cmd.lower().startswith("pid:"):
+            try:
+                target_pid = int(clean_cmd.split(":", 1)[1].strip())
+            except ValueError:
+                target_pid = None
+        elif target_pid is None and clean_cmd.isdigit():
+            target_pid = int(clean_cmd)
 
         strace_cmd = ["strace", "-f"] if follow_children else ["strace"]
-        cmd_args = strace_cmd + shlex.split(command)
+
+        if target_pid is not None:
+            self.is_attached = True
+            self.target_pid = target_pid
+            cmd_args = strace_cmd + ["-p", str(target_pid)]
+            target_cwd = None
+            print(f"[+] Attaching strace to running PID: {target_pid} (follow_children={follow_children})")
+        else:
+            target_cwd = cwd if (cwd and os.path.isdir(cwd)) else None
+            display_cwd = target_cwd or os.getcwd()
+            print(f"[+] Target command: {command} (cwd={display_cwd}, follow_children={follow_children})")
+            cmd_args = strace_cmd + shlex.split(command)
+
+        print("[+] Launching strace...\n" + "=" * 60)
 
         # os.setsid creates a new process group so strace and the child process
         # can both be cleanly terminated together if stop() is requested.
@@ -76,12 +102,18 @@ class TraceSession:
     def stop(self):
         """
         Terminates the active strace and child processes cleanly.
+        If attached to an external PID, sends SIGINT to strace so it cleanly detaches
+        without terminating the monitored target process.
         """
         self._stopped = True
         if self.process and self.process.poll() is None:
             try:
-                pgid = os.getpgid(self.process.pid)
-                os.killpg(pgid, signal.SIGTERM)
+                if self.is_attached:
+                    # SIGINT causes strace to detach cleanly from the target PID
+                    self.process.send_signal(signal.SIGINT)
+                else:
+                    pgid = os.getpgid(self.process.pid)
+                    os.killpg(pgid, signal.SIGTERM)
             except Exception:
                 try:
                     self.process.kill()
@@ -89,13 +121,13 @@ class TraceSession:
                     pass
 
 
-def trace_command(command: str, on_line=None, follow_children: bool = False, cwd: str = None):
+def trace_command(command: str = "", on_line=None, follow_children: bool = False, cwd: str = None, pid: int = None):
     """
     Execute a command under strace and capture its system calls.
     Maintains backward compatibility with earlier stages.
     """
     session = TraceSession()
-    return session.start(command, on_line=on_line, follow_children=follow_children, cwd=cwd)
+    return session.start(command, on_line=on_line, follow_children=follow_children, cwd=cwd, pid=pid)
 
 
 if __name__ == "__main__":

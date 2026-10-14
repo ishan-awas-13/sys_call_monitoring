@@ -166,9 +166,18 @@ class ProcessTreeTracker:
         m_attach = re.search(r'Process\s+(\d+)\s+attached', clean)
         if m_attach:
             child_pid = m_attach.group(1)
+            if self.root_pid is None or self.root_pid == "Main":
+                self._adopt_main_as_pid(child_pid)
             # Only associate parent if unambiguous (single parent) or already known
-            ppid = self.root_pid if (self.root_pid and len(self.nodes) == 1) else None
+            ppid = self.root_pid if (self.root_pid and len(self.nodes) == 1 and self.root_pid != child_pid) else None
             self.ensure_process(child_pid, ppid=ppid)
+
+        # 1b. strace: Process 768 detached
+        m_detach = re.search(r'Process\s+(\d+)\s+detached', clean)
+        if m_detach:
+            det_pid = m_detach.group(1)
+            if det_pid in self.nodes:
+                self.nodes[det_pid].status = "Detached (Clean)"
 
         # 2. [pid  768] +++ exited with 0 +++
         m_exit = re.search(r'(?:\[pid\s+(\d+)\]\s+)?\+{3}\s+exited with (\d+)\s+\+{3}', clean)
