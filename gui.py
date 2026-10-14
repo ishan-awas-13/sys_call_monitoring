@@ -44,9 +44,10 @@ class RawOutputWindow:
     # Session counter to give each window a unique title
     _session_counter = 0
 
-    def __init__(self, root: tk.Tk, command: str):
+    def __init__(self, root: tk.Tk, command: str, cwd: str = ""):
         RawOutputWindow._session_counter += 1
         self._session_id = RawOutputWindow._session_counter
+        self.cwd = cwd or os.getcwd()
 
         self.top = tk.Toplevel(root)
         self.top.title(
@@ -65,9 +66,10 @@ class RawOutputWindow:
 
     def _build_ui(self, command: str):
         """Builds the black terminal-style raw output display."""
+        cwd_tag = f"   [cwd: {self.cwd}]" if self.cwd else ""
         header = tk.Label(
             self.top,
-            text=f"  ▶ strace  →  {command}",
+            text=f"  ▶ strace  →  {command}{cwd_tag}",
             bg="#1a1a2e",
             fg="#00ff88",
             font=("Courier", 10, "bold"),
@@ -193,6 +195,11 @@ class SyscallMonitorApp:
         # Phase 9: Command History (in-memory last 10 distinct commands)
         self.command_history = ["cat sample.txt"]
 
+        # Working directory support
+        self.default_cwd = os.getcwd()
+        self.working_dir_var = tk.StringVar(value=self.default_cwd)
+        self.current_cwd = self.default_cwd
+
         # Master dataset (persists regardless of table filters)
         self.records = []
         self.total_count = 0
@@ -215,7 +222,7 @@ class SyscallMonitorApp:
 
     def _build_ui(self):
         # -------------------------------------------------------------
-        # 1. Top Controls Frame (2-Row Functional Grid)
+        # 1. Top Controls Frame (3-Row Functional Grid)
         # -------------------------------------------------------------
         controls_frame = ttk.LabelFrame(self.root, text=" Monitoring & Target Controls ", padding=8)
         controls_frame.pack(fill="x", padx=10, pady=(8, 4))
@@ -247,7 +254,21 @@ class SyscallMonitorApp:
         )
         self.chk_child.pack(side="left", padx=(14, 4))
 
-        # Row 1: Action Buttons & Session Status
+        # Row 1: Working Directory Selection
+        row_dir_frame = ttk.Frame(controls_frame)
+        row_dir_frame.pack(fill="x", pady=(0, 6))
+
+        ttk.Label(row_dir_frame, text="Working Directory:").pack(side="left", padx=(0, 4))
+        self.dir_entry = ttk.Entry(row_dir_frame, textvariable=self.working_dir_var, width=50)
+        self.dir_entry.pack(side="left", padx=4, fill="x", expand=True)
+
+        self.btn_browse_dir = ttk.Button(row_dir_frame, text="📁 Select Directory...", command=self._choose_directory)
+        self.btn_browse_dir.pack(side="left", padx=3)
+
+        self.btn_reset_dir = ttk.Button(row_dir_frame, text="Default", command=self._reset_directory)
+        self.btn_reset_dir.pack(side="left", padx=(0, 4))
+
+        # Row 2: Action Buttons & Session Status
         row1_frame = ttk.Frame(controls_frame)
         row1_frame.pack(fill="x")
 
@@ -801,6 +822,45 @@ class SyscallMonitorApp:
             self.cmd_entry.insert(0, selected)
 
     # -----------------------------------------------------------------
+    # Working Directory Selection Methods
+    # -----------------------------------------------------------------
+    def _choose_directory(self):
+        """Opens a directory chooser dialog and updates the working directory field."""
+        current_val = self.working_dir_var.get().strip()
+        resolved = self._resolve_directory_path(current_val)
+        initial_dir = resolved if os.path.isdir(resolved) else self.default_cwd
+
+        selected = filedialog.askdirectory(
+            initialdir=initial_dir,
+            title="Select Directory to Run Command",
+            parent=self.root
+        )
+        if selected:
+            norm = os.path.normpath(selected)
+            self.working_dir_var.set(norm)
+
+    def _reset_directory(self):
+        """Resets the working directory to the application default path."""
+        self.working_dir_var.set(self.default_cwd)
+
+    def _resolve_directory_path(self, raw_path: str) -> str:
+        """
+        Normalizes a path string, converting Windows drive paths to WSL paths if needed.
+        """
+        clean = (raw_path or "").strip().strip('"').strip("'")
+        if not clean:
+            return self.default_cwd
+
+        # Handle Windows drive letters like C:\ or C:/ in WSL
+        if len(clean) >= 2 and clean[1] == ":" and clean[0].isalpha():
+            drive = clean[0].lower()
+            rest = clean[2:].replace("\\", "/").lstrip("/")
+            clean = f"/mnt/{drive}/{rest}"
+
+        expanded = os.path.expanduser(clean)
+        return os.path.abspath(expanded)
+
+    # -----------------------------------------------------------------
     # Phase 8: Process Tree UI & Methods
     # -----------------------------------------------------------------
     def _build_ptree_tab(self):
@@ -996,18 +1056,16 @@ class SyscallMonitorApp:
         self.lbl_ptree_detail.config(
             text=f"Selected: PID {pid} (Parent: {ppid}) | Binary: {cmd} | Status: {status} | Syscalls: {count}"
         )
-        self.btn_filter_pid.config(state="normal" if self.combo_ptree_session.current() == 0 else "disabled")
+        self.btn_filter_pid.config(state="normal")
 
     def _filter_trace_by_selected_pid(self):
         """Filters the main monitor table by the selected PID."""
-        if self.combo_ptree_session.current() != 0:
-            return
         selected = self.ptree_view.selection()
         if not selected:
             return
         vals = self.ptree_view.item(selected[0], "values")
         if vals:
-            pid = vals[0]
+            pid = str(vals[0])
             self.filter_var.set(pid)
             self.notebook.select(self.tab_monitor)
 
@@ -1155,6 +1213,7 @@ class SyscallMonitorApp:
 
         metrics_rows = [
             ("Command", s_a["command"], s_b["command"], "-"),
+            ("Working Directory", s_a.get("cwd", "-"), s_b.get("cwd", "-"), "-"),
             ("Timestamp", s_a["timestamp"], s_b["timestamp"], "-"),
             ("Status", s_a["status"], s_b["status"], "-"),
             ("Total Syscalls", s_a["total_count"], s_b["total_count"], diff_str(s_a["total_count"], s_b["total_count"])),
@@ -1205,6 +1264,7 @@ class SyscallMonitorApp:
         session_data = {
             "id": len(self.session_history) + 1,
             "command": self.last_command or self.cmd_entry.get().strip() or "Unknown command",
+            "cwd": self.current_cwd or self.default_cwd,
             "timestamp": (self.session_start_time or datetime.now()).strftime("%Y-%m-%d %H:%M:%S"),
             "status": status,
             "total_count": stats["total_count"],
@@ -1299,6 +1359,7 @@ class SyscallMonitorApp:
             "=============================",
             "",
             f"Command: {command_name}",
+            f"Working Directory: {self.current_cwd or self.default_cwd}",
             f"Date/Time: {timestamp}",
             f"Child Process Tracing (-f): {'Enabled' if self.follow_children_var.get() else 'Disabled'}",
             "",
@@ -1457,6 +1518,16 @@ class SyscallMonitorApp:
             messagebox.showwarning("Empty Command", "Please enter a valid command to trace.")
             return
 
+        # Validate and resolve working directory
+        target_cwd = self._resolve_directory_path(self.working_dir_var.get())
+        if not os.path.isdir(target_cwd):
+            messagebox.showerror(
+                "Invalid Working Directory",
+                f"The selected working directory does not exist:\n{target_cwd}\n\nPlease choose a valid directory."
+            )
+            return
+
+        self.current_cwd = target_cwd
         self.is_monitoring = True
         self.last_command = cmd
         self.session_start_time = datetime.now()
@@ -1477,12 +1548,15 @@ class SyscallMonitorApp:
         self.btn_export.config(state="disabled")
         self.chk_child.config(state="disabled")
         self.combo_history.config(state="disabled")
+        self.dir_entry.config(state="disabled")
+        self.btn_browse_dir.config(state="disabled")
+        self.btn_reset_dir.config(state="disabled")
         self.lbl_status.config(text="Status: Monitoring...", foreground="#0066cc")
 
         # --- Stage 6.1: Open a FRESH raw output window for this session ---
         # A new RawOutputWindow is created every time Start is clicked.
         # The single real strace process feeds BOTH this window and the parser.
-        self._raw_window = RawOutputWindow(self.root, cmd)
+        self._raw_window = RawOutputWindow(self.root, cmd, cwd=target_cwd)
 
         def _worker():
             def on_line(raw_line):
@@ -1506,7 +1580,7 @@ class SyscallMonitorApp:
 
             try:
                 self.session = TraceSession()
-                self.session.start(cmd, on_line=on_line, follow_children=follow_children)
+                self.session.start(cmd, on_line=on_line, follow_children=follow_children, cwd=target_cwd)
             except Exception as e:
                 self.queue.put(("error", str(e)))
             finally:
@@ -1529,6 +1603,9 @@ class SyscallMonitorApp:
             self.btn_clear.config(state="normal")
             self.chk_child.config(state="normal")
             self.combo_history.config(state="readonly")
+            self.dir_entry.config(state="normal")
+            self.btn_browse_dir.config(state="normal")
+            self.btn_reset_dir.config(state="normal")
             self._save_current_session("Stopped (Incomplete)")
             self._refresh_export_button_state()
             self._refresh_ptree_ui()
@@ -1630,6 +1707,9 @@ class SyscallMonitorApp:
                 self.btn_clear.config(state="normal")
                 self.chk_child.config(state="normal")
                 self.combo_history.config(state="readonly")
+                self.dir_entry.config(state="normal")
+                self.btn_browse_dir.config(state="normal")
+                self.btn_reset_dir.config(state="normal")
                 is_stopped = (self.lbl_status.cget("text") == "Status: Stopped")
                 status = "Stopped (Incomplete)" if is_stopped else "Completed"
                 if not is_stopped:
@@ -1644,6 +1724,9 @@ class SyscallMonitorApp:
                 self.btn_clear.config(state="normal")
                 self.chk_child.config(state="normal")
                 self.combo_history.config(state="readonly")
+                self.dir_entry.config(state="normal")
+                self.btn_browse_dir.config(state="normal")
+                self.btn_reset_dir.config(state="normal")
                 self.lbl_status.config(text=f"Status: Error ({payload})", foreground="#cc0000")
                 self._save_current_session("Error (Incomplete)")
                 self._refresh_export_button_state()
@@ -1856,7 +1939,7 @@ class SyscallMonitorApp:
                     self.compare_sessions(0, 1)
 
                     cmp_children = self.cmp_tree.get_children()
-                    assert len(cmp_children) == 6 + len(ALL_CATEGORIES), f"Comparison table should have {6 + len(ALL_CATEGORIES)} rows"
+                    assert len(cmp_children) == 7 + len(ALL_CATEGORIES), f"Comparison table should have {7 + len(ALL_CATEGORIES)} rows"
 
                     # Verify metric values in tree match sessions
                     cmp_dict = {}
@@ -1867,6 +1950,7 @@ class SyscallMonitorApp:
                     s1_ref = self.session_history[0]
                     s2_ref = self.session_history[1]
 
+                    assert "Working Directory" in cmp_dict, "Working Directory must be present in comparison table"
                     assert str(cmp_dict["Total Syscalls"][0]) == str(s1_ref["total_count"])
                     assert str(cmp_dict["Total Syscalls"][1]) == str(s2_ref["total_count"])
                     assert str(cmp_dict["Successful Calls"][0]) == str(s1_ref["successful_count"])
@@ -1875,7 +1959,7 @@ class SyscallMonitorApp:
                         assert cat in cmp_dict, f"Category '{cat}' missing from comparison table"
                         assert str(cmp_dict[cat][0]) == str(s1_ref["category_counts"].get(cat, 0))
                         assert str(cmp_dict[cat][1]) == str(s2_ref["category_counts"].get(cat, 0))
-                    print(f"[✓] Phase 2 & 4: Comparison table metrics verified (all {len(ALL_CATEGORIES)} categories matched).")
+                    print(f"[✓] Phase 2 & 4: Comparison table metrics verified (all {len(ALL_CATEGORIES)} categories + Working Directory matched).")
 
                     freq_children = self.freq_tree.get_children()
                     assert len(freq_children) > 0, "Frequency comparison table should be populated"
@@ -1993,28 +2077,60 @@ class SyscallMonitorApp:
                         self.reset_filter()
 
                         # -----------------------------------------------------
-                        # Clean Process Termination / Stop Monitoring Test
+                        # Working Directory Selection Verification
                         # -----------------------------------------------------
-                        print("\n[*] Phase 8 Process Control Test: Verifying clean Stop Monitoring...")
+                        print("\n[*] Working Directory Test: Verifying custom cwd execution...")
+                        assert self._resolve_directory_path("C:\\Users\\ishan\\Desktop") == "/mnt/c/Users/ishan/Desktop"
+                        assert self._resolve_directory_path("") == self.default_cwd
+
+                        # Set working directory to /tmp and run pwd
+                        self.working_dir_var.set("/tmp")
                         self.cmd_entry.delete(0, tk.END)
-                        self.cmd_entry.insert(0, 'python3 -c "import time; time.sleep(10)"')
+                        self.cmd_entry.insert(0, "pwd")
                         self.start_monitoring()
-                        assert self.is_monitoring is True
 
-                        def do_stop_check():
-                            self.stop_monitoring()
-                            assert self.is_monitoring is False
-                            assert "Stopped" in self.lbl_status.cget("text")
+                        def step_after_cwd_test():
+                            if self.is_monitoring:
+                                self.root.after(200, step_after_cwd_test)
+                                return
+
+                            assert self.current_cwd == "/tmp", f"Expected current_cwd to be '/tmp', got '{self.current_cwd}'"
                             last_sess = self.session_history[-1]
-                            assert "Stopped" in last_sess["status"]
-                            print("[✓] Stop monitoring cleanly terminated the process group.")
+                            assert last_sess.get("cwd") == "/tmp", f"Session history cwd mismatch: {last_sess.get('cwd')}"
+                            print("[✓] Custom working directory ('/tmp') execution and session recording verified.")
 
-                            print("\n" + "=" * 60)
-                            print("[✓] ALL OScope Phases 1–9 Verification Tests Passed Successfully!")
-                            print("============================================================")
-                            self.root.after(400, self.root.destroy)
+                            # Reset directory back to default
+                            self._reset_directory()
+                            assert self.working_dir_var.get() == self.default_cwd
+                            print("[✓] Directory reset to default path verified.")
 
-                        self.root.after(500, do_stop_check)
+                            self.clear_data()
+
+                            # -----------------------------------------------------
+                            # Clean Process Termination / Stop Monitoring Test
+                            # -----------------------------------------------------
+                            print("\n[*] Phase 8 Process Control Test: Verifying clean Stop Monitoring...")
+                            self.cmd_entry.delete(0, tk.END)
+                            self.cmd_entry.insert(0, 'python3 -c "import time; time.sleep(10)"')
+                            self.start_monitoring()
+                            assert self.is_monitoring is True
+
+                            def do_stop_check():
+                                self.stop_monitoring()
+                                assert self.is_monitoring is False
+                                assert "Stopped" in self.lbl_status.cget("text")
+                                last_sess = self.session_history[-1]
+                                assert "Stopped" in last_sess["status"]
+                                print("[✓] Stop monitoring cleanly terminated the process group.")
+
+                                print("\n" + "=" * 60)
+                                print("[✓] ALL OScope Phases 1–9 & Working Directory Tests Passed Successfully!")
+                                print("============================================================")
+                                self.root.after(400, self.root.destroy)
+
+                            self.root.after(500, do_stop_check)
+
+                        self.root.after(300, step_after_cwd_test)
 
                     self.root.after(300, step_after_test4)
 

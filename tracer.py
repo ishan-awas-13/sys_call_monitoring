@@ -22,13 +22,16 @@ class TraceSession:
         self.process = None
         self._stopped = False
 
-    def start(self, command: str, on_line=None, follow_children: bool = False):
+    def start(self, command: str, on_line=None, follow_children: bool = False, cwd: str = None):
         """
         Launches strace and reads lines from stderr until completion or stop() is called.
         If follow_children is True, attaches -f flag to strace to trace child processes.
+        If cwd is provided, the command and strace execute inside that directory.
         """
         self._stopped = False
-        print(f"[+] Target command: {command} (follow_children={follow_children})")
+        target_cwd = cwd if (cwd and os.path.isdir(cwd)) else None
+        display_cwd = target_cwd or os.getcwd()
+        print(f"[+] Target command: {command} (cwd={display_cwd}, follow_children={follow_children})")
         print("[+] Launching strace...\n" + "=" * 60)
 
         strace_cmd = ["strace", "-f"] if follow_children else ["strace"]
@@ -42,7 +45,8 @@ class TraceSession:
             stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
-            preexec_fn=os.setsid
+            preexec_fn=os.setsid,
+            cwd=target_cwd
         )
 
         captured_syscall_lines = []
@@ -85,13 +89,13 @@ class TraceSession:
                     pass
 
 
-def trace_command(command: str, on_line=None, follow_children: bool = False):
+def trace_command(command: str, on_line=None, follow_children: bool = False, cwd: str = None):
     """
     Execute a command under strace and capture its system calls.
     Maintains backward compatibility with earlier stages.
     """
     session = TraceSession()
-    return session.start(command, on_line=on_line, follow_children=follow_children)
+    return session.start(command, on_line=on_line, follow_children=follow_children, cwd=cwd)
 
 
 if __name__ == "__main__":

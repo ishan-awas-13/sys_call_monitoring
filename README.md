@@ -57,6 +57,11 @@ Categorizes system calls according to Operating System fundamentals:
 ### 11. Report Export
 - Export complete session records and statistical summaries to **CSV** or human-readable **TXT** reports via native file-save dialogs.
 
+### 12. Working Directory Selection (CWD Selector)
+- Execute monitored commands in any directory on your system.
+- Includes a **📁 Select Directory...** dialog, manual path entry with automatic Windows-to-WSL path translation (`C:\...` -> `/mnt/c/...`), and a **Default** reset button.
+- The execution working directory is tracked in session history, side-by-side session comparisons, and exported reports.
+
 ---
 
 ## 🏗️ Project Architecture
