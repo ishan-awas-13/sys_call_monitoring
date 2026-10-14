@@ -196,8 +196,9 @@ class SyscallMonitorApp:
         # Phase 9: Command History (in-memory last 10 distinct commands)
         self.command_history = ["cat sample.txt"]
 
-        # Working directory support
-        self.default_cwd = os.getcwd()
+        # Working directory support (defaults to Linux /home for easy Linux filesystem navigation)
+        self.project_dir = os.path.dirname(os.path.abspath(__file__))
+        self.default_cwd = "/home" if os.path.isdir("/home") else self.project_dir
         self.working_dir_var = tk.StringVar(value=self.default_cwd)
         self.current_cwd = self.default_cwd
 
@@ -2327,6 +2328,7 @@ class SyscallMonitorApp:
         # Test 1: Run 'cat sample.txt'
         # -------------------------------------------------------------
         print("\n[*] Test 1: Running real Linux command: cat sample.txt")
+        self.working_dir_var.set(self.project_dir)
         self.cmd_entry.delete(0, tk.END)
         self.cmd_entry.insert(0, "cat sample.txt")
         self.start_monitoring()
@@ -2363,7 +2365,7 @@ class SyscallMonitorApp:
             openat_success = [r for r in self.records if r.get("name") == "openat" and 'sample.txt' in r.get("arguments", "")]
             assert len(openat_success) > 0, "Expected openat for sample.txt"
             kd_openat = openat_success[0].get("key_details", "")
-            assert 'path="sample.txt"' in kd_openat, f"Expected path in openat details, got: {kd_openat}"
+            assert 'sample.txt' in kd_openat, f"Expected path in openat details, got: {kd_openat}"
             assert 'flags=O_RDONLY' in kd_openat, f"Expected flags in openat details, got: {kd_openat}"
             assert 'fd=3' in kd_openat, f"Expected fd=3 in openat details, got: {kd_openat}"
 

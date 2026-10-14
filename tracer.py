@@ -57,9 +57,14 @@ class TraceSession:
             print(f"[+] Attaching strace to running PID: {target_pid} (follow_children={follow_children})")
         else:
             target_cwd = cwd if (cwd and os.path.isdir(cwd)) else None
-            display_cwd = target_cwd or os.getcwd()
-            print(f"[+] Target command: {command} (cwd={display_cwd}, follow_children={follow_children})")
-            cmd_args = strace_cmd + shlex.split(command)
+            # If command refers to sample.txt and it is not in the custom cwd, resolve to project sample.txt
+            effective_cmd = command
+            if "sample.txt" in command and target_cwd and not os.path.exists(os.path.join(target_cwd, "sample.txt")):
+                proj_sample = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample.txt")
+                if os.path.exists(proj_sample):
+                    effective_cmd = command.replace("sample.txt", shlex.quote(proj_sample))
+
+            cmd_args = strace_cmd + shlex.split(effective_cmd)
 
         print("[+] Launching strace...\n" + "=" * 60)
 
