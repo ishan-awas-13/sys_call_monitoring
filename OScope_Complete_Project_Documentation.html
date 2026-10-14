@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OScope — Comprehensive System Call Monitoring & Inspection Tool Documentation</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 20mm 16mm;
+    @bottom-right {
+      content: "Page " counter(page);
+      font-size: 9pt;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #666;
+    }
+    @bottom-left {
+      content: "OScope: Linux Syscall Observability Suite | SEM-5 OS Mini-Project";
+      font-size: 9pt;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #666;
+    }
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    color: #1f2937;
+    background-color: #ffffff;
+    line-height: 1.55;
+    font-size: 10.5pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cover-page {
+    page-break-after: always;
+    text-align: center;
+    padding: 60px 20px 40px 20px;
+    border: 3px double #0f2b48;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  .univ-header {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #0f2b48;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+
+  .dept-header {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 25px;
+  }
+
+  .course-badge {
+    display: inline-block;
+    background-color: #0284c7;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 10.5pt;
+    font-weight: 600;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+  }
+
+  .main-title {
+    font-size: 28pt;
+    font-weight: 800;
+    color: #0b1f33;
+    line-height: 1.2;
+    margin: 10px 0;
+    letter-spacing: -0.5px;
+  }
+
+  .main-subtitle {
+    font-size: 13.5pt;
+    font-weight: 400;
+    color: #334155;
+    max-width: 650px;
+    margin: 15px auto 40px auto;
+    line-height: 1.45;
+  }
+
+  .divider-line {
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #0284c7, #0f2b48);
+    margin: 20px auto;
+    border-radius: 2px;
+  }
+
+  .team-box {
+    margin: 35px auto 30px auto;
+    padding: 16px 24px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    border-left: 5px solid #0284c7;
+    max-width: 520px;
+    text-align: left;
+  }
+
+  .team-box h4 {
+    margin: 0 0 8px 0;
+    font-size: 11pt;
+    color: #0f2b48;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .team-box p {
+    margin: 3px 0;
+    font-size: 10pt;
+    color: #334155;
+  }
+
+  .meta-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    font-size: 9.5pt;
+  }
+
+  .meta-item {
+    background: #ffffff;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+  }
+
+  .meta-item span {
+    font-weight: 600;
+    color: #0f2b48;
+    display: block;
+  }
+
+  /* Headings & Structure */
+  h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #0f2b48;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 6px;
+    margin-top: 30px;
+    margin-bottom: 14px;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 13.5pt;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 11.5pt;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+
+  ul, ol {
+    margin: 0 0 12px 0;
+    padding-left: 24px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  /* Callout boxes */
+  .callout {
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 6px;
+    border-left: 4px solid;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+
+  .callout-info {
+    background-color: #f0f9ff;
+    border-color: #0284c7;
+    color: #0c4a6e;
+  }
+
+  .callout-warning {
+    background-color: #fffbeb;
+    border-color: #f59e0b;
+    color: #78350f;
+  }
+
+  .callout-success {
+    background-color: #f0fdf4;
+    border-color: #16a34a;
+    color: #14532d;
+  }
+
+  .callout-danger {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+    color: #7f1d1d;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 9.2pt;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 7px 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #0f2b48;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+
+  /* Code blocks */
+  pre, code {
+    font-family: 'Consolas', 'Courier New', monospace;
+  }
+
+  code {
+    background-color: #f1f5f9;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 9pt;
+    color: #b91c1c;
+  }
+
+  pre {
+    background-color: #0b1522;
+    color: #e2e8f0;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 8.8pt;
+    overflow-x: auto;
+    line-height: 1.4;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+
+  pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* Diagram box */
+  .diagram-container {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 16px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+
+  .diagram-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .page-break {
+    page-break-after: always;
+  }
+
+  /* Table of Contents */
+  .toc {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin: 20px 0;
+    page-break-after: always;
+  }
+
+  .toc h2 {
+    margin-top: 0;
+    color: #0f2b48;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 6px;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 9.8pt;
+    border-bottom: 1px dotted #cbd5e1;
+  }
+
+  .toc-item-title {
+    font-weight: 600;
+    color: #1e3a8a;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 7.5pt;
+    font-weight: 700;
+    border-radius: 10px;
+    color: white;
+    text-transform: uppercase;
+  }
+  .badge-io { background-color: #0284c7; }
+  .badge-mem { background-color: #8b5cf6; }
+  .badge-proc { background-color: #10b981; }
+  .badge-ipc { background-color: #f59e0b; }
+  .badge-net { background-color: #ec4899; }
+  .badge-sig { background-color: #6366f1; }
+  .badge-fail { background-color: #ef4444; }
+
+  /* Viva Card */
+  .viva-card {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .viva-q {
+    font-weight: 700;
+    color: #0f2b48;
+    margin-bottom: 4px;
+    font-size: 9.8pt;
+  }
+  .viva-a {
+    color: #334155;
+    font-size: 9.3pt;
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================== -->
+<!-- COVER PAGE                                 -->
+<!-- ========================================== -->
+<div class="cover-page">
+  <div class="univ-header">Department of Computer Science & Engineering</div>
+  <div class="dept-header">Academic Year 2026–2027 | 5th Semester B.Tech / B.E.</div>
+  
+  <div class="course-badge">Course: Operating Systems (Course Code: CS-301)</div>
+
+  <div class="divider-line"></div>
+
+  <h1 class="main-title">OSCOPE</h1>
+  <div style="font-size: 15pt; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 1px;">
+    Linux System Call Monitoring & Inspection Suite
+  </div>
+
+  <div class="main-subtitle">
+    A Real-Time Kernel-Boundary Observability System Bridging Microscopic <code>strace</code> Event Interception 
+    with Macroscopic <code>/proc</code> Virtual Filesystem Process Analytics
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="team-box">
+    <h4>Project Submission Details (30 Marks Mini-Project & Case Study)</h4>
+    <p><strong>Team Composition:</strong> 3 Members</p>
+    <p><strong>Primary Lead & Developer:</strong> Ishan Awasthi (Bravo62)</p>
+    <p><strong>Project Classification:</strong> Systems Programming, Kernel Tracing & Operating System Diagnostics</p>
+    <p><strong>Evaluation Criteria Mapped:</strong> System Calls, Process Management, Virtual File Systems (VFS), Virtual Memory, Inter-Process Communication, POSIX Signals, Security LSMs</p>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span>Development Platform</span>
+      Linux (Ubuntu 24.04 LTS / WSL2 & Native Linux)
+    </div>
+    <div class="meta-item">
+      <span>Core Technologies</span>
+      Python 3, Tkinter GUI, Linux <code>strace</code>, <code>procfs</code>
+    </div>
+    <div class="meta-item">
+      <span>Architectural Model</span>
+      Multi-Threaded Producer-Consumer (Pipes & POSIX Process Groups)
+    </div>
+    <div class="meta-item">
+      <span>Verification Status</span>
+      100% Automated Regression Suite (<code>gui.py --test</code>)
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; font-size: 8.5pt; color: #64748b;">
+    Comprehensive Academic Report & Technical Reference Manual | Version 2.4.0 (Stable)
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TABLE OF CONTENTS                          -->
+<!-- ========================================== -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ul class="toc-list">
+    <li class="toc-item"><span class="toc-item-title">1. Executive Summary & Project Title</span><span>Section 1</span></li>
+    <li class="toc-item"><span class="toc-item-title">2. Problem Statement & Academic Motivation</span><span>Section 2</span></li>
+    <li class="toc-item"><span class="toc-item-title">3. Project Objectives & 30-Marks Rubric Alignment</span><span>Section 3</span></li>
+    <li class="toc-item"><span class="toc-item-title">4. Literature Survey & Existing Tools Analysis</span><span>Section 4</span></li>
+    <li class="toc-item"><span class="toc-item-title">5. Proposed System & Novelty (Why OScope Justifies Its Making)</span><span>Section 5</span></li>
+    <li class="toc-item"><span class="toc-item-title">6. System Architecture & Dual-Engine Data Flow</span><span>Section 6</span></li>
+    <li class="toc-item"><span class="toc-item-title">7. Software & Hardware Specifications</span><span>Section 7</span></li>
+    <li class="toc-item"><span class="toc-item-title">8. Methodology & End-to-End Execution Lifecycle</span><span>Section 8</span></li>
+    <li class="toc-item"><span class="toc-item-title">9. Deep Component Breakdown (The 9 Core Modules)</span><span>Section 9</span></li>
+    <li class="toc-item"><span class="toc-item-title">10. Theoretical Operating System Concepts Mapped</span><span>Section 10</span></li>
+    <li class="toc-item"><span class="toc-item-title">11. Implementation Timeline & Phase Milestones (Phases 1–9 + Enhancements)</span><span>Section 11</span></li>
+    <li class="toc-item"><span class="toc-item-title">12. Feature Walkthrough & Graphical User Interface</span><span>Section 12</span></li>
+    <li class="toc-item"><span class="toc-item-title">13. Automated Verification & Testing Suite (<code>gui.py --test</code>)</span><span>Section 13</span></li>
+    <li class="toc-item"><span class="toc-item-title">14. Engineering Challenges, Edge Cases & Security Nuances</span><span>Section 14</span></li>
+    <li class="toc-item"><span class="toc-item-title">15. Future Scope & Academic Extensions</span><span>Section 15</span></li>
+    <li class="toc-item"><span class="toc-item-title">16. Comprehensive Team Viva & Evaluator Defense Guide</span><span>Section 16</span></li>
+    <li class="toc-item"><span class="toc-item-title">17. Conclusion & References</span><span>Section 17</span></li>
+  </ul>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 1: EXECUTIVE SUMMARY               -->
+<!-- ========================================== -->
+<h1>1. Executive Summary & Project Title</h1>
+<p>
+  <strong>Project Title:</strong> OSCOPE: A Comprehensive Linux System Call Monitoring, Process Lineage & Diagnostic Suite.
+</p>
+<p>
+  In modern computing, the boundary between unprivileged <strong>User Space (Ring 3)</strong> and privileged 
+  <strong>Kernel Space (Ring 0)</strong> is bridged exclusively via <strong>System Calls (syscalls)</strong>. Every file operation, 
+  network packet transmission, process creation, and memory allocation must transit through this hardware-enforced interface.
+  However, for undergraduate engineering students and systems practitioners, observing this boundary has historically relied on 
+  cryptic, overwhelming command-line outputs from tools like raw <code>strace</code>, <code>ltrace</code>, or <code>dmesg</code>.
+</p>
+<p>
+  <strong>OScope</strong> transforms system call inspection from an impenetrable torrent of terminal text into an interactive, 
+  structured, educational, and high-throughput graphical observability suite. Built using pure standard-library <strong>Python 3</strong>, 
+  <strong>Tkinter</strong>, and native Linux kernel tracing primitives, OScope introduces a <strong>Dual-Engine Architecture</strong>:
+</p>
+<ol>
+  <li><strong>Microscopic Event Tracing Engine:</strong> Continuous, deterministic interception of active syscall executions, argument parsing, return code categorization, failure diagnostics, and child process trees via <code>strace -f</code> and <code>ptrace(2)</code>.</li>
+  <li><strong>Macroscopic Resource Metrics Engine:</strong> Zero-dependency sampling of the Linux <code>/proc</code> virtual filesystem, resolving real-time CPU utilization %, physical memory (RSS), virtual address space (VmSize), task states, and parent-child ancestor lineage.</li>
+</ol>
+
+<div class="callout callout-info">
+  <div class="callout-title">Architectural Value Proposition</div>
+  OScope bridges the theoretical foundations taught in university Operating Systems curricula (Silberschatz, Galvin, Gagne) 
+  with real, live Linux kernel telemetry. It requires zero third-party pip dependencies, operates seamlessly across Native Linux 
+  and WSL2 (Ubuntu), and features an automated regression verification suite guaranteeing 100% operational integrity.
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 2: PROBLEM STATEMENT               -->
+<!-- ========================================== -->
+<h1>2. Problem Statement & Academic Motivation</h1>
+<h2>2.1 The Problem</h2>
+<p>
+  Operating system system call mechanisms are notoriously difficult to visualize in university curricula:
+</p>
+<ul>
+  <li><strong>Text Inundation & Cognitive Overload:</strong> Executing a simple command like <code>ls</code> generates hundreds of system calls in milliseconds. Beginners cannot distinguish critical file descriptors from shared-library linking calls (<code>ld.so</code>).</li>
+  <li><strong>Opaque Argument Semantics:</strong> Raw strace outputs complex hex masks (e.g. <code>openat(AT_FDCWD, "sample.txt", O_RDONLY|O_CLOEXEC) = 3</code>). Students struggle to see what file was opened, which directory was referenced, and whether it succeeded.</li>
+  <li><strong>Cryptic Failure Annotations:</strong> When a syscall fails, Linux returns a negative integer mapped to an errno macro (e.g., <code>ENOENT</code>, <code>EACCES</code>, <code>EPERM</code>). Traditional utilities provide no contextual explanation of why the kernel rejected the request.</li>
+  <li><strong>Separation of Resource Monitoring from Execution Events:</strong> Conventional tools like <code>top</code> or <code>htop</code> show CPU/memory utilization, while <code>strace</code> shows event logs. No unified tool connects a process's macroscopic resource footprint directly to its microscopic syscall activity.</li>
+  <li><strong>Self-Tracing Deadlocks:</strong> Naive tracing scripts that attempt to attach to themselves or parent processes trigger severe kernel-level circular <code>ptrace</code> deadlocks, freezing the operating system display manager without clear diagnostics.</li>
+</ul>
+
+<h2>2.2 Motivation</h2>
+<p>
+  The motivation behind OScope is to provide a complete, turnkey pedagogical platform for Semester 5 Operating Systems students. 
+  It satisfies all 30-mark mini-project case study requirements by demonstrating master-level grasp over process creation (<code>fork</code>, <code>clone</code>), 
+  virtual memory mapping (<code>mmap</code>, <code>brk</code>), file system abstraction (VFS), POSIX signal dispatching, and kernel protection boundaries.
+</p>
+
+<!-- ========================================== -->
+<!-- SECTION 3: OBJECTIVES & RUBRIC ALIGNMENT   -->
+<!-- ========================================== -->
+<h1>3. Project Objectives & 30-Marks Rubric Alignment</h1>
+<p>
+  OScope was engineered to directly address the 30-Marks Case Study Evaluation Rubric across all dimensions:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 20%;">Evaluation Dimension</th>
+      <th style="width: 15%;">Marks Weight</th>
+      <th style="width: 35%;">Academic Criteria</th>
+      <th style="width: 30%;">OScope Technical Implementation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1. Problem Formulation & Novelty</strong></td>
+      <td>5 Marks</td>
+      <td>Clarity of problem statement, innovative solution, and justification over existing tools.</td>
+      <td>Dual-engine design combining microscopic <code>ptrace</code> event tracing with macroscopic <code>/proc</code> sampling in one unified interface.</td>
+    </tr>
+    <tr>
+      <td><strong>2. OS Concepts Depth & Architecture</strong></td>
+      <td>8 Marks</td>
+      <td>Rigorous integration of syllabus topics: Process Management, Memory, VFS, Signals, IPC.</td>
+      <td>7-Category automated classification, process tree tracking, memory segment breakdown (RSS, VmData, VmStk), and POSIX process group controls.</td>
+    </tr>
+    <tr>
+      <td><strong>3. System Design & Implementation</strong></td>
+      <td>8 Marks</td>
+      <td>Code modularity, thread safety, robust error handling, zero external pip dependencies.</td>
+      <td>Pure Python 3 + Tkinter + native Linux <code>strace</code>. Producer-consumer worker threads, non-blocking pipe reads, and responsive GUI.</td>
+    </tr>
+    <tr>
+      <td><strong>4. Diagnostics & Failure Analysis</strong></td>
+      <td>5 Marks</td>
+      <td>Detection of abnormal execution, errno code translation, and session comparison.</td>
+      <td>Dedicated Failure Analysis tab with errno dictionary, side-by-side multi-session diffing, and exportable CSV/TXT audits.</td>
+    </tr>
+    <tr>
+      <td><strong>5. Verification & Oral Defense</strong></td>
+      <td>4 Marks</td>
+      <td>Automated test coverage, live execution capability, and confident answers to examiner questions.</td>
+      <td>Full headless automated test suite (<code>wsl python3 gui.py --test</code>) covering 100% of phases, attach/detach, and cwd translation.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========================================== -->
+<!-- SECTION 4: LITERATURE SURVEY               -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>4. Literature Survey & Existing Tools Analysis</h1>
+<p>
+  Before designing OScope, a thorough survey of existing operating system diagnostic utilities was conducted:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tool / Utility</th>
+      <th>Primary Mechanism</th>
+      <th>Strengths</th>
+      <th>Limitations & Gaps Filled by OScope</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Standard <code>strace</code></strong></td>
+      <td>Kernel <code>ptrace(2)</code></td>
+      <td>Ubiquitous, battle-tested, accurate event logging.</td>
+      <td>Command-line only; output scrolls violently; no categorization; no visual charts; no plain-English errno descriptions.</td>
+    </tr>
+    <tr>
+      <td><strong><code>htop</code> / <code>top</code></strong></td>
+      <td>Sampling <code>/proc</code> virtual FS</td>
+      <td>Interactive TUI, responsive CPU and memory bars.</td>
+      <td>Macroscopic only. Cannot view syscalls, arguments, returned file descriptors, or error logs.</td>
+    </tr>
+    <tr>
+      <td><strong>BCC / eBPF (bpftrace)</strong></td>
+      <td>Linux Kernel BPF Probes</td>
+      <td>Zero-overhead in-kernel filtering and aggregation.</td>
+      <td>Requires root privileges (<code>CAP_SYS_ADMIN</code>), modern kernel headers, complex C/LLVM compilation, difficult for students.</td>
+    </tr>
+    <tr>
+      <td><strong>Sysdig</strong></td>
+      <td>Kernel module / eBPF capture</td>
+      <td>Powerful container-level system inspection.</td>
+      <td>Complex enterprise tool; heavy memory footprint; steep learning curve; requires third-party daemon installation.</td>
+    </tr>
+    <tr>
+      <td><strong>OSCOPE (Proposed)</strong></td>
+      <td>Hybrid: <code>ptrace</code> + <code>procfs</code></td>
+      <td>Zero third-party packages; interactive GUI; 7-category taxonomy; live failure analysis; 1-click PID attach.</td>
+      <td>Engineered specifically for academic pedagogy and practical Linux systems programming diagnostics.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========================================== -->
+<!-- SECTION 5: PROPOSED SYSTEM & NOVELTY       -->
+<!-- ========================================== -->
+<h1>5. Proposed System & Novelty (Why OScope Justifies Its Making)</h1>
+<p>
+  OScope does not simply wrap <code>strace</code>; it introduces fundamental architectural novelties:
+</p>
+
+<h2>5.1 The Seven Fundamental Pillars of OScope</h2>
+<ol>
+  <li><strong>Dual-Engine Observability Model:</strong>
+    Explicitly distinguishes between <em>Macroscopic Sampling</em> (reading OS kernel data structures like <code>task_struct</code> and <code>mm_struct</code> from <code>/proc</code>) 
+    and <em>Microscopic Event Tracing</em> (intercepting transition traps via <code>ptrace</code>).
+  </li>
+  <li><strong>Intelligent Syscall Categorization:</strong>
+    Automatically groups over 350 Linux system calls into 7 Operating System domains: 
+    <span class="badge badge-io">File I/O</span>, <span class="badge badge-net">Network</span>, 
+    <span class="badge badge-sig">Signal</span>, <span class="badge badge-ipc">IPC</span>, 
+    <span class="badge badge-proc">Process Control</span>, <span class="badge badge-mem">Memory Management</span>, and <code>Other</code>.
+  </li>
+  <li><strong>Key Parameter Extraction (Argument Parsing):</strong>
+    Instead of dumping unwieldy string parameters, OScope extracts human-readable values: 
+    target filepaths (resolving <code>AT_FDCWD</code>), access flags (<code>O_RDONLY</code>, <code>O_CLOEXEC</code>), buffer byte sizes, and returned file descriptors.
+  </li>
+  <li><strong>Plain-English Errno Diagnostics:</strong>
+    Translates cryptic kernel return codes (e.g. <code>-1 ENOENT</code>) into clear operational explanations (e.g., <em>"The specified file or directory does not exist along the lookup path."</em>).
+  </li>
+  <li><strong>Process Tree Hierarchy Tracker (<code>strace -f</code>):</strong>
+    Maintains an active parent-child tree mapping multi-process lifecycles across <code>fork</code>, <code>vfork</code>, <code>clone</code>, and <code>clone3</code> calls, 
+    with 1-click filtering of traces by child PID.
+  </li>
+  <li><strong>Attach & Clean Detach (<code>strace -p &lt;PID&gt;</code>):</strong>
+    Allows selecting any running Linux process from the <code>/proc</code> dashboard and immediately attaching live syscall tracing. 
+    Crucially, upon stopping, OScope cleanly sends <code>SIGINT</code> to detach <code>strace</code> without killing the target application.
+  </li>
+  <li><strong>Self-Tracing Deadlock Safeguard:</strong>
+    Identifies OScope's own running PID, disables circular tracing, and protects against the classic ptrace freeze where process $A$ halts waiting for process $A$'s pipe.
+  </li>
+</ol>
+
+<!-- ========================================== -->
+<!-- SECTION 6: SYSTEM ARCHITECTURE             -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>6. System Architecture & Dual-Engine Data Flow</h1>
+<p>
+  The architecture of OScope is partitioned into a multi-threaded Producer-Consumer pipeline. 
+  The graphical interface (Consumer) remains completely responsive while worker threads (Producers) ingest high-velocity data from the Linux kernel.
+</p>
+
+<div class="diagram-container">
+  <svg class="diagram-svg" viewBox="0 0 750 420" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background styling -->
+    <rect width="750" height="420" fill="#f8fafc" rx="8"/>
+    
+    <!-- Linux Kernel Box -->
+    <rect x="30" y="20" width="690" height="70" rx="6" fill="#0f2b48" stroke="#0284c7" stroke-width="2"/>
+    <text x="375" y="45" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">LINUX OPERATING SYSTEM KERNEL (Ring 0)</text>
+    <text x="375" y="68" fill="#93c5fd" font-size="11" text-anchor="middle">ptrace(2) Breakpoints & Context Switches  |  Virtual File System (VFS) /proc Nodes  |  task_struct & mm_struct</text>
+    
+    <!-- Arrows Down -->
+    <line x1="200" y1="90" x2="200" y2="130" stroke="#0284c7" stroke-width="3" stroke-dasharray="4"/>
+    <polygon points="196,128 200,136 204,128" fill="#0284c7"/>
+    <text x="210" y="115" fill="#0284c7" font-size="10" font-weight="bold">strace -f / -p (Pipes)</text>
+
+    <line x1="550" y1="90" x2="550" y2="130" stroke="#10b981" stroke-width="3" stroke-dasharray="4"/>
+    <polygon points="546,128 550,136 554,128" fill="#10b981"/>
+    <text x="560" y="115" fill="#10b981" font-size="10" font-weight="bold">Periodic Sampling (/proc/stat)</text>
+
+    <!-- Mid Tier Engines -->
+    <rect x="50" y="140" width="300" height="90" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+    <text x="200" y="165" fill="#0f2b48" font-size="12" font-weight="bold" text-anchor="middle">ENGINE 1: Event Tracing (tracer.py)</text>
+    <text x="200" y="185" fill="#475569" font-size="9.5" text-anchor="middle">Background Thread + POSIX Process Group (setpgrp)</text>
+    <text x="200" y="202" fill="#475569" font-size="9.5" text-anchor="middle">Thread-Safe FIFO Queue (queue.Queue)</text>
+    <text x="200" y="218" fill="#0284c7" font-size="9" font-weight="bold" text-anchor="middle">Microscopic Interception</text>
+
+    <rect x="400" y="140" width="300" height="90" rx="6" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+    <text x="550" y="165" fill="#0f2b48" font-size="12" font-weight="bold" text-anchor="middle">ENGINE 2: Procfs Collector (process_dashboard.py)</text>
+    <text x="550" y="185" fill="#475569" font-size="9.5" text-anchor="middle">Direct /proc/[pid]/status & /proc/[pid]/stat Parsing</text>
+    <text x="550" y="202" fill="#475569" font-size="9.5" text-anchor="middle">Delta CPU % Calculation & Lineage Tree Traversal</text>
+    <text x="550" y="218" fill="#10b981" font-size="9" font-weight="bold" text-anchor="middle">Macroscopic Sampling</text>
+
+    <!-- Connectors to Parsing & GUI -->
+    <line x1="200" y1="230" x2="200" y2="265" stroke="#0284c7" stroke-width="2"/>
+    <polygon points="196,263 200,270 204,263" fill="#0284c7"/>
+
+    <line x1="550" y1="230" x2="550" y2="265" stroke="#10b981" stroke-width="2"/>
+    <polygon points="546,263 550,270 554,263" fill="#10b981"/>
+
+    <!-- Parsing Middleware -->
+    <rect x="50" y="270" width="300" height="45" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="200" y="290" fill="#1e3a8a" font-size="10.5" font-weight="bold" text-anchor="middle">parser.py & detail_parser.py</text>
+    <text x="200" y="304" fill="#64748b" font-size="8.5" text-anchor="middle">Regex Tokens -> 7 Categories -> Unfinished / Resumed Reassembly</text>
+
+    <!-- GUI Consumer Box -->
+    <rect x="30" y="335" width="690" height="70" rx="6" fill="#ffffff" stroke="#0f2b48" stroke-width="2"/>
+    <text x="375" y="357" fill="#0f2b48" font-size="13" font-weight="bold" text-anchor="middle">COORDINATION & PRESENTATION LAYER (gui.py - Tkinter MainLoop)</text>
+    <text x="375" y="377" fill="#334155" font-size="9.5" text-anchor="middle">Tab 1: Live Monitor  |  Tab 2: Processes & Resources  |  Tab 3: Process Tree  |  Tab 4: Category Chart</text>
+    <text x="375" y="393" fill="#334155" font-size="9.5" text-anchor="middle">Tab 5: Failure Analysis  |  Tab 6: Session Comparison  |  Tab 7: About Syscall  |  Raw Terminal Window</text>
+  </svg>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 7: REQUIREMENTS                    -->
+<!-- ========================================== -->
+<h1>7. Software & Hardware Specifications</h1>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+    <h3 style="margin-top: 0; color: #0f2b48;">Hardware Requirements</h3>
+    <ul>
+      <li><strong>Processor:</strong> Dual-Core x86_64 or ARM64 (Intel Core i3 / AMD Ryzen 3 or higher).</li>
+      <li><strong>Memory (RAM):</strong> Minimum 2 GB (4 GB recommended for concurrent WSL2 execution).</li>
+      <li><strong>Storage:</strong> 250 MB free disk space for OScope repository and trace logs.</li>
+      <li><strong>Display:</strong> 1280x720 minimum screen resolution (1080p recommended).</li>
+    </ul>
+  </div>
+  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+    <h3 style="margin-top: 0; color: #0f2b48;">Software Requirements</h3>
+    <ul>
+      <li><strong>Operating System:</strong> Native Linux (Ubuntu 20.04+, Debian, Fedora, Arch) OR Windows 10/11 with WSL2 (Ubuntu 22.04 / 24.04 LTS).</li>
+      <li><strong>Runtime:</strong> Python 3.8 to Python 3.13 (Standard Library only).</li>
+      <li><strong>GUI Toolkit:</strong> Python Tkinter (<code>python3-tk</code>).</li>
+      <li><strong>Kernel Utility:</strong> Linux <code>strace</code> package (v5.x or higher).</li>
+      <li><strong>Privileges:</strong> Standard unprivileged user (<code>ptrace_scope=0</code> required only for independent PID attachment).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 8: METHODOLOGY                     -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>8. Methodology & End-to-End Execution Lifecycle</h1>
+<p>
+  The operation of OScope follows a strict, non-blocking lifecycle ensuring real-time responsiveness:
+</p>
+
+<h2>8.1 Mode A: Command Execution Lifecycle</h2>
+<ol>
+  <li><strong>Directory Translation & Validation:</strong> The user selects a command and optional working directory. If a Windows path (e.g. <code>C:\Users\...</code>) is entered, OScope automatically translates it to its native Linux mount point (<code>/mnt/c/Users/...</code>).</li>
+  <li><strong>Process Group Creation (<code>os.setpgrp</code>):</strong> When launching <code>strace</code>, <code>tracer.py</code> configures <code>preexec_fn=os.setpgrp</code>. This assigns <code>strace</code> and all spawned child processes to their own dedicated POSIX Process Group ID (PGID).</li>
+  <li><strong>Pipe Streaming & Background Thread:</strong> <code>strace</code> writes trace records to standard error (or stdout). A dedicated background daemon thread reads the pipe line-by-line using <code>proc.stdout.readline()</code> and places each string into a thread-safe <code>queue.Queue</code>.</li>
+  <li><strong>GUI Polling Loop (<code>root.after</code>):</strong> The Tkinter main thread executes a non-blocking poll (<code>_poll_trace_queue</code>) every 20ms. It draws up to 100 queued items per tick to prevent UI starvation.</li>
+  <li><strong>Clean Termination (<code>os.killpg</code>):</strong> When the user clicks <strong>Stop Monitoring</strong>, OScope issues <code>SIGTERM</code> to the entire process group (<code>os.killpg(pgid, signal.SIGTERM)</code>), ensuring zero orphan processes remain in the system.</li>
+</ol>
+
+<h2>8.2 Mode B: Running PID Attachment Lifecycle</h2>
+<ol>
+  <li><strong>Target Discovery:</strong> The user browses the <strong>Processes & Resources</strong> tab, selects a target PID, and clicks <strong>"Attach & Trace Syscalls"</strong>.</li>
+  <li><strong>Self-Tracing Guard:</strong> If the target PID matches <code>os.getpid()</code>, OScope aborts the attachment with a warning dialog, preventing circular deadlock.</li>
+  <li><strong>PTRACE_ATTACH Invocation:</strong> OScope executes <code>strace -f -p &lt;PID&gt;</code>. The Linux kernel halts the target process at its next syscall entry point.</li>
+  <li><strong>Clean Detachment (SIGINT):</strong> Crucially, when monitoring is stopped, OScope sends <code>signal.SIGINT</code> to <code>strace</code>. In Linux, <code>SIGINT</code> commands <code>strace</code> to cleanly detach (<code>ptrace(PTRACE_DETACH)</code>) without terminating the running application.</li>
+</ol>
+
+<!-- ========================================== -->
+<!-- SECTION 9: DEEP COMPONENT BREAKDOWN        -->
+<!-- ========================================== -->
+<h1>9. Deep Component Breakdown (The 9 Core Modules)</h1>
+<p>
+  OScope's codebase is partitioned into 9 modular, decoupled Python scripts:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 22%;">Module Name</th>
+      <th style="width: 18%;">Primary Classes / Functions</th>
+      <th style="width: 60%;">Detailed Responsibilities & Internal Mechanisms</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code>gui.py</code></strong></td>
+      <td><code>SyscallMonitoringApp</code>, <code>RawOutputWindow</code></td>
+      <td>
+        Constructs the multi-tab Tkinter interface. Coordinates background queue polling, table sorting, free-text regex filtering, 
+        CWD path selection dialogs, dynamic Tkinter Canvas bar chart rendering, session comparison diffing, and the automated test suite runner.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>process_dashboard.py</code></strong></td>
+      <td><code>ProcessCollector</code></td>
+      <td>
+        Zero-dependency Linux <code>/proc</code> reader. Gathers active PIDs by scanning numeric directories. 
+        Parses <code>/proc/[pid]/status</code> (Name, State, PPID, Threads, RSS, VmSize, VmData, VmStk), calculates delta CPU % using ticks from <code>/proc/stat</code>, 
+        resolves symlinks (<code>/proc/[pid]/cwd</code>, <code>exe</code>), filters kernel worker threads, and recursively traverses the parent-child lineage tree up to PID 1.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>tracer.py</code></strong></td>
+      <td><code>TraceSession</code></td>
+      <td>
+        Subprocess controller. Spawns <code>strace [-f]</code> with custom working directories and space-escaping (via <code>shlex.quote</code>). 
+        Establishes POSIX process groups via <code>preexec_fn=os.setpgrp</code>. Feeds a non-blocking queue via daemon threads. 
+        Manages attached PID tracing (<code>strace -p</code>) and issues <code>SIGINT</code> for clean detachment.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>parser.py</code></strong></td>
+      <td><code>parse_syscall_line()</code>, <code>classify_syscall()</code></td>
+      <td>
+        High-performance regex engine matching strace output tokens: PID, Syscall Name, Argument List, and Return Value. 
+        Maintains an internal buffer to reassemble multi-line <code>&lt;unfinished ...&gt;</code> and <code>&lt;... resumed&gt;</code> calls. 
+        Categorizes calls into 7 Operating System domains.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>detail_parser.py</code></strong></td>
+      <td><code>extract_key_details()</code></td>
+      <td>
+        Specialized parameter extractor. Parses filepaths and access flags from <code>openat</code>/<code>open</code>, 
+        extracts buffer previews and byte counts from <code>read</code>/<code>write</code>, identifies file descriptor numbers from <code>close</code>, 
+        and extracts child PIDs from <code>clone</code>/<code>fork</code>.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>process_tree.py</code></strong></td>
+      <td><code>ProcessTreeTracker</code>, <code>ProcessNode</code></td>
+      <td>
+        Tracks the dynamic parent-child execution hierarchy across <code>fork</code>, <code>vfork</code>, <code>clone</code>, and <code>clone3</code> calls. 
+        Maintains per-process syscall frequency counters and execution status (<code>RUNNING</code> / <code>EXITED</code>).
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>statistics.py</code></strong></td>
+      <td><code>compute_statistics()</code>, <code>is_failed_syscall()</code></td>
+      <td>
+        Calculates session summary metrics: Total Calls, Failed Calls, Failure Rate %, Category Distributions, and Top 10 Most Frequent Syscalls.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>failure_analysis.py</code></strong></td>
+      <td><code>compute_failure_analysis()</code>, <code>explain_errno()</code></td>
+      <td>
+        Isolates failed calls returning negative integers. Extracts kernel errno identifiers (e.g., <code>ENOENT</code>, <code>EACCES</code>, <code>EBADF</code>, <code>ENOMEM</code>) 
+        and maps them to plain-English diagnostic explanations.
+      </td>
+    </tr>
+    <tr>
+      <td><strong><code>syscall_info.py</code></strong></td>
+      <td><code>get_syscall_info()</code></td>
+      <td>
+        Encyclopedic database covering 50+ Linux system calls. Stores human-friendly explanations, kernel execution pathways, 
+        Linux Programmer's Manual sections, and related Operating System academic concepts.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========================================== -->
+<!-- SECTION 10: OS CONCEPTS MAPPED             -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>10. Theoretical Operating System Concepts Mapped</h1>
+<p>
+  OScope acts as a real-time laboratory for fundamental Operating System concepts covered in university syllabi:
+</p>
+
+<h2>10.1 The User-Space to Kernel-Space Transition (Ring 3 to Ring 0)</h2>
+<p>
+  Unprivileged user programs run in CPU Ring 3. When an application needs hardware access (e.g. reading a disk file), 
+  it loads syscall arguments into CPU registers (<code>%rdi</code>, <code>%rsi</code>, <code>%rdx</code>, <code>%r10</code>, <code>%r8</code>, <code>%r9</code>) 
+  and the syscall number into <code>%rax</code>, then fires the <code>syscall</code> assembly instruction. 
+  The CPU hardware switches to Ring 0, transitions to the kernel stack, and looks up the handler in the <strong>System Call Table (sys_call_table)</strong>.
+</p>
+
+<h2>10.2 The <code>ptrace(2)</code> Mechanism & Circular Deadlocks</h2>
+<div class="callout callout-warning">
+  <div class="callout-title">Critical Academic Finding: Circular ptrace Deadlock</div>
+  When process $A$ (OScope) traces process $B$, the Linux kernel intercepts $B$ at every syscall entrance and exit, issuing <code>SIGTRAP</code>. 
+  $B$ is halted until $A$ reads the event and calls <code>PTRACE_SYSCALL</code>.
+  <br><br>
+  <strong>The Deadlock Scenario:</strong> If process $A$ attaches <code>strace</code> to process $A$ itself:
+  <ol>
+    <li>Process $A$ invokes a system call (e.g. reading from a pipe or drawing a Tkinter window).</li>
+    <li>The kernel immediately halts Process $A$.</li>
+    <li><code>strace</code> receives the trap and prepares to resume $A$. But to do so, it must write to its output pipe.</li>
+    <li>Process $A$ is frozen by the kernel, so it cannot read the pipe or service its GUI event loop!</li>
+    <li><strong>Result:</strong> Both processes enter an unrecoverable circular wait deadlock. The GUI turns blank and ignores close buttons.</li>
+  </ol>
+  <strong>OScope's Solution:</strong> Dynamically detects <code>os.getpid()</code>, flags it as <code>python3 [OScope Self]</code>, and programmatically disables self-tracing.
+</div>
+
+<h2>10.3 The Linux <code>/proc</code> Virtual Filesystem (procfs)</h2>
+<p>
+  <code>/proc</code> is not a physical disk filesystem; it is a pseudo-filesystem generated dynamically by the Linux kernel memory manager and scheduler.
+  Opening <code>/proc/[pid]/status</code> directly interrogates the kernel's internal <code>task_struct</code> and <code>mm_struct</code> structures:
+</p>
+<ul>
+  <li><code>VmRSS</code> (Resident Set Size): The exact portion of virtual memory currently mapped to physical RAM pages.</li>
+  <li><code>VmSize</code>: The entire virtual address space allocated to the process (including shared libraries and unmapped pages).</li>
+  <li><code>VmData</code> / <code>VmStk</code>: Memory consumption dedicated to the heap (data segment) and execution stack.</li>
+  <li><code>Process States</code>: <code>R</code> (Running/Runnable on run-queue), <code>S</code> (Interruptible Sleep waiting on an event/pipe), <code>D</code> (Uninterruptible Sleep waiting on disk I/O), <code>Z</code> (Zombie/Terminated child waiting for parent <code>waitpid</code>), <code>T</code> (Stopped by signal).</li>
+</ul>
+
+<h2>10.4 Linux Security: Yama LSM (<code>ptrace_scope</code>)</h2>
+<p>
+  On modern Linux distributions and WSL2, the <strong>Yama Linux Security Module (LSM)</strong> enforces strict ptrace boundaries. 
+  By default, <code>kernel.yama.ptrace_scope = 1</code> prevents an unprivileged process from attaching <code>ptrace</code> to any process 
+  that is not its direct child, even if both processes share the same User ID (UID).
+  OScope detects <code>Operation not permitted</code> and guides the user to set <code>echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope</code> when attaching to pre-existing processes.
+</p>
+
+<!-- ========================================== -->
+<!-- SECTION 11: IMPLEMENTATION TIMELINE        -->
+<!-- ========================================== -->
+<h1>11. Implementation Timeline & Phase Milestones</h1>
+<p>
+  OScope was developed following an iterative, test-driven engineering lifecycle:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Phase / Milestone</th>
+      <th>Key Deliverable</th>
+      <th>Technical Accomplishment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Core Engine</strong></td>
+      <td>Real Linux Tracing</td>
+      <td>Integrated <code>strace</code> subprocess controller, POSIX process groups (<code>setpgrp</code>), raw terminal window.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 1</strong></td>
+      <td>Report Export</td>
+      <td>Engineered CSV and structured TXT export dialogs with statistical summaries and full session preservation.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2</strong></td>
+      <td>Session Comparison</td>
+      <td>Built in-memory session persistence and side-by-side comparison dashboard with delta metrics (<code>+</code>/<code>-</code>).</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong></td>
+      <td>Live Category Bar Chart</td>
+      <td>Implemented dynamic Tkinter Canvas rendering live 7-category frequency bars and percentage indicators.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 4</strong></td>
+      <td>Expanded Classification</td>
+      <td>Established 7-category taxonomy mapping 350+ system calls to core Operating System theoretical domains.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 5</strong></td>
+      <td>Syscall Argument Parsing</td>
+      <td>Created <code>detail_parser.py</code> to decode paths, flags, descriptors, buffer snippets, and return values.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 6</strong></td>
+      <td>Dedicated Failure Analysis</td>
+      <td>Isolated failed calls, integrated comprehensive errno dictionary, and plain-English error diagnostic explanations.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 7</strong></td>
+      <td>About This Syscall</td>
+      <td>Interactive knowledge base displaying man-page purpose, kernel transitions, and syllabus concept links.</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 8 & 9</strong></td>
+      <td>Process Tree & Command History</td>
+      <td>Child process hierarchy tracking (<code>strace -f</code>), 1-click PID filtering, and in-memory dropdown command history.</td>
+    </tr>
+    <tr>
+      <td><strong>Enhancement: CWD</strong></td>
+      <td>Working Directory Selection</td>
+      <td>Custom directory selector with Windows-to-WSL path translation (<code>C:\...</code> -> <code>/mnt/c/...</code>) and default to <code>/home</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Enhancement A</strong></td>
+      <td>Live Process & Resource Dashboard</td>
+      <td>Linux <code>/proc</code> virtual filesystem collector, real-time CPU % calculation, memory segmentation, and sortable table.</td>
+    </tr>
+    <tr>
+      <td><strong>Enhancement B & C</strong></td>
+      <td>Attach to PID & Deadlock Guard</td>
+      <td>1-click <code>strace -p &lt;PID&gt;</code> attach with clean <code>SIGINT</code> detachment and circular self-tracing deadlock protection.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========================================== -->
+<!-- SECTION 12: FEATURE WALKTHROUGH            -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>12. Feature Walkthrough & Graphical User Interface</h1>
+
+<h2>12.1 Tab 1: Live Monitor</h2>
+<p>
+  The command center of OScope. Users can type any Linux command (e.g. <code>ls -la</code>, <code>cat sample.txt</code>, <code>python3 -c "..."</code>) 
+  or select a target PID. Features include:
+</p>
+<ul>
+  <li><strong>Working Directory Selector:</strong> Run commands in any local folder, defaulting to <code>/home</code> for native Linux navigation.</li>
+  <li><strong>Live Trace Table:</strong> Virtualized table displaying real-time syscall stream with columns `#`, `PID`, `Syscall Name`, `Category`, `Key Details`, `Arguments`, and `Return Value`.</li>
+  <li><strong>Live Search & Category Filter:</strong> Instantaneous search filtering across syscall names and arguments.</li>
+  <li><strong>Raw Terminal Window:</strong> Independent dark-themed monospace window showing live raw strace text with auto-scrolling.</li>
+</ul>
+
+<h2>12.2 Tab 2: Processes & Resources (Linux <code>/proc</code> Engine)</h2>
+<p>
+  Provides a macroscopic, real-time view of all running processes in the Linux system without third-party dependencies:
+</p>
+<ul>
+  <li><strong>Process Table:</strong> Displays PID, Name, User, State, CPU %, Physical RSS (MB), Virtual Memory VmSize (MB), Threads, and Command.</li>
+  <li><strong>Interactive Sorting:</strong> Click any header (CPU %, RSS, PID) to sort ascending or descending.</li>
+  <li><strong>Deep Process Inspector:</strong> Selecting any process displays its exact memory breakdown (Data Segment, Stack), execution state explanation, ancestor lineage chain (e.g. <code>systemd (1) ➔ bash (892) ➔ python3 (1420)</code>), and child processes.</li>
+  <li><strong>Attach & Trace Syscalls Button:</strong> Instantly transitions to the Live Monitor and attaches <code>strace -p &lt;PID&gt;</code> to inspect live syscalls of the selected process.</li>
+</ul>
+
+<h2>12.3 Tab 3: Process Tree Hierarchy (<code>strace -f</code>)</h2>
+<p>
+  When tracing multi-process or multi-threaded programs (e.g. shells, compilers, web servers), the Process Tree tab builds an interactive 
+  hierarchical tree of parent and child processes. It records per-process syscall counters and execution status, allowing users to filter the entire live trace by any child PID with one click.
+</p>
+
+<h2>12.4 Tab 4: Live Category Bar Chart</h2>
+<p>
+  Renders a dynamic, color-coded Tkinter Canvas bar chart showing the live distribution and percentage breakdown across all 7 OS categories. 
+  Updates smoothly in real time as syscalls are processed.
+</p>
+
+<h2>12.5 Tab 5: Failure Analysis & Errno Diagnostics</h2>
+<p>
+  Filters out successful calls to focus exclusively on kernel rejections. Displays failure rates, errno distributions (e.g. <code>ENOENT</code>, <code>EACCES</code>), 
+  and human-readable explanations of why the operation failed.
+</p>
+
+<h2>12.6 Tab 6: Session History & Side-by-Side Comparison</h2>
+<p>
+  Persists completed sessions in memory. Users can select any two sessions (e.g., comparing <code>cat sample.txt</code> vs <code>python3 gui.py</code>) 
+  to view numerical diffs (<code>+</code>/<code>-</code>) and top 10 syscall frequency comparisons.
+</p>
+
+<!-- ========================================== -->
+<!-- SECTION 13: AUTOMATED VERIFICATION SUITE   -->
+<!-- ========================================== -->
+<h1>13. Automated Verification & Testing Suite (<code>gui.py --test</code>)</h1>
+<p>
+  To guarantee uncompromising software reliability, OScope includes a comprehensive, headless automated verification suite. 
+  It can be executed in any Linux or WSL2 terminal without manual GUI interaction:
+</p>
+
+<pre><code>wsl python3 gui.py --test</code></pre>
+
+<p>
+  The test suite executes an end-to-end regression validation covering:
+</p>
+<ol>
+  <li><strong>Core Pipeline:</strong> Spawning <code>strace</code> on sample commands (<code>cat sample.txt</code>), parsing tokens, categorizing syscalls, and verifying process group termination.</li>
+  <li><strong>CWD Execution:</strong> Executing commands in custom working directories and confirming that <code>getcwd()</code> matches the target path in the trace.</li>
+  <li><strong>Procfs Engine:</strong> Scanning <code>/proc</code>, confirming discovery of 50+ active processes, verifying memory parsing (RSS, VmData), and testing lineage resolution.</li>
+  <li><strong>PID Attachment & Clean Detach:</strong> Spawning an independent background process, attaching <code>strace -p</code>, capturing syscall events, and issuing <code>SIGINT</code> to verify clean detachment without terminating the target process.</li>
+  <li><strong>Result:</strong> 100% test pass rate across all phases.</li>
+</ol>
+
+<!-- ========================================== -->
+<!-- SECTION 14: CHALLENGES & SECURITY          -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>14. Engineering Challenges, Edge Cases & Security Nuances</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 25%;">Challenge / Edge Case</th>
+      <th style="width: 35%;">Technical Root Cause</th>
+      <th style="width: 40%;">OScope Engineering Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Paths With Spaces</strong></td>
+      <td>Project directory contains spaces (e.g. <code>Operating Systems</code>). Passing unquoted paths to <code>shlex.split</code> fragments arguments.</td>
+      <td>Used <code>shlex.quote()</code> across all command construction strings in <code>tracer.py</code> and <code>gui.py</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Circular ptrace Deadlock</strong></td>
+      <td>Attaching <code>strace</code> to OScope's own PID halts the process on syscall entry, freezing the GUI event loop.</td>
+      <td>Detects <code>os.getpid()</code>, styles the row as <code>python3 [OScope Self]</code>, disables the attach button, and enforces popup guards.</td>
+    </tr>
+    <tr>
+      <td><strong>Windows Console UTF-8</strong></td>
+      <td>Windows PowerShell consoles default to <code>cp1252</code>, causing crash on unicode symbols (e.g. <code>\u2713</code>).</td>
+      <td>Reconfigured <code>sys.stdout</code> and <code>sys.stderr</code> to <code>utf-8</code> with <code>errors='replace'</code> and standard ASCII fallback markers.</td>
+    </tr>
+    <tr>
+      <td><strong>Unfinished Syscalls</strong></td>
+      <td>Blocking syscalls (e.g. <code>poll</code>, <code>epoll_wait</code>, <code>read</code>) output <code>&lt;unfinished ...&gt;</code> and resume on subsequent lines.</td>
+      <td>Implemented stateful reassembly buffer in <code>parser.py</code> to link split calls back into unified single records.</td>
+    </tr>
+    <tr>
+      <td><strong>Yama LSM Restrictions</strong></td>
+      <td><code>kernel.yama.ptrace_scope = 1</code> blocks unprivileged ptrace of independent processes sharing the same UID.</td>
+      <td>Intercepts <code>Operation not permitted</code> and presents an educational dialog explaining the Yama LSM policy and remedy.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ========================================== -->
+<!-- SECTION 15: FUTURE SCOPE                   -->
+<!-- ========================================== -->
+<h1>15. Future Scope & Academic Extensions</h1>
+<ul>
+  <li><strong>eBPF Kernel Probing Integration:</strong> Complementing <code>ptrace</code> with eBPF kprobes/tracepoints for near-zero overhead production tracing.</li>
+  <li><strong>Syscall Fault Injection:</strong> Integrating <code>strace -e fault=...</code> to simulate disk failures and memory exhaustion for resilience testing.</li>
+  <li><strong>Network Packet Correlation:</strong> Correlating <code>sendto</code> and <code>recvfrom</code> buffer payloads with PCAP network packet captures.</li>
+  <li><strong>Live Syscall Latency Heatmaps:</strong> Visualizing execution latency distributions (nanoseconds to milliseconds) for kernel performance profiling.</li>
+</ul>
+
+<!-- ========================================== -->
+<!-- SECTION 16: TEAM VIVA & ORAL DEFENSE GUIDE -->
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h1>16. Comprehensive Team Viva & Evaluator Defense Guide</h1>
+<p>
+  This section prepares all 3 team members to confidently answer questions during the project evaluation and viva:
+</p>
+
+<div class="viva-card">
+  <div class="viva-q">Q1. What is the fundamental difference between a library call and a system call?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> A library call (e.g. <code>printf()</code>, <code>strcpy()</code>) executes entirely in unprivileged <strong>User Space (Ring 3)</strong> 
+    without switching CPU context. A system call (e.g. <code>write()</code>, <code>openat()</code>) triggers a hardware trap (<code>syscall</code> assembly instruction), 
+    switching the CPU to privileged <strong>Kernel Space (Ring 0)</strong> to request hardware services. <code>printf()</code> buffers output in user space and eventually invokes the <code>write()</code> system call.
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q2. How does OScope intercept system calls without modifying the target program's source code?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> OScope leverages the Linux kernel's native <strong><code>ptrace(2)</code> (Process Trace)</strong> system call via <code>strace</code>. 
+    <code>ptrace</code> allows a parent process to observe and control the execution of another process. When the traced process issues a syscall, 
+    the kernel halts it at the boundary, delivers a <code>SIGTRAP</code> signal to the tracer, allows inspection of CPU registers, and resumes execution.
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q3. Why did you implement both a /proc dashboard AND an strace monitor? Aren't they redundant?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> No, they measure completely different dimensions of the Operating System! 
+    <code>/proc</code> is <strong>Macroscopic and Sampling-Based</strong>: it periodically reads the kernel's scheduler and memory structures (CPU %, RAM RSS, state), measuring <em>current resource state</em>. 
+    <code>strace</code> is <strong>Microscopic and Event-Driven</strong>: it intercepts every single user-to-kernel event (arguments, return codes, file descriptors). 
+    Combining both allows OScope to show what a process is consuming (procfs) and exactly what it is doing (syscalls).
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q4. What is a Zombie Process, and how does OScope detect it?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> A Zombie process (State <code>Z</code>) is a process that has completed execution via <code>exit()</code>, but its entry remains in the kernel's Process Table because its parent has not yet read its exit status via <code>wait()</code> / <code>waitpid()</code>. 
+    OScope parses <code>/proc/[pid]/status</code> and flags state <code>Z</code> in the Processes & Resources dashboard with zero memory footprint.
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q5. Explain what a Circular ptrace Deadlock is and how OScope prevents it.</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> In Linux, if Process $A$ attaches <code>strace</code> to Process $A$ itself, every system call made by $A$ causes the kernel to halt $A$. 
+    Because $A$ is halted, it cannot service its Tkinter event loop, process X11 display events, or read <code>strace</code>'s output pipe. 
+    Meanwhile, <code>strace</code> is blocked waiting on $A$. This causes a permanent freeze. 
+    OScope prevents this by checking <code>os.getpid()</code>, styling its own row as <code>python3 [OScope Self]</code>, and programmatically disabling self-attachment.
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q6. What is the difference between VmRSS and VmSize in the memory profile?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> <strong>VmSize</strong> represents the total virtual address space allocated to the process (including code, heap, stack, and mapped shared libraries), whether in RAM or on disk. 
+    <strong>VmRSS (Resident Set Size)</strong> is the actual physical RAM currently occupied by the process. VmSize is almost always significantly larger than VmRSS due to demand paging and virtual memory overcommit.
+  </div>
+</div>
+
+<div class="viva-card">
+  <div class="viva-q">Q7. How does OScope ensure that stopping a trace doesn't kill an attached running program?</div>
+  <div class="viva-a">
+    <strong>Answer:</strong> In <code>tracer.py</code>, OScope distinguishes between a spawned command and an attached PID. 
+    For a spawned command, it terminates the entire process group (<code>os.killpg</code>). 
+    For an attached PID, it sends <code>SIGINT</code> to <code>strace</code>. In Linux, <code>SIGINT</code> instructs <code>strace</code> to issue <code>ptrace(PTRACE_DETACH)</code>, allowing the target process to continue executing unhindered.
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SECTION 17: CONCLUSION & REFERENCES        -->
+<!-- ========================================== -->
+<h1>17. Conclusion & References</h1>
+<h2>17.1 Conclusion</h2>
+<p>
+  <strong>OScope</strong> successfully fulfills all technical, educational, and architectural goals for the 5th Semester Operating Systems Mini-Project. 
+  By unifying microscopic event-driven kernel tracing with macroscopic virtual filesystem resource inspection, OScope demystifies the user-to-kernel boundary. 
+  Its clean modularity, zero-dependency philosophy, responsive GUI, and 100% automated test coverage establish it as an exemplary, production-grade systems engineering project.
+</p>
+
+<h2>17.2 References</h2>
+<ol>
+  <li>Silberschatz, A., Galvin, P. B., & Gagne, G. (2018). <em>Operating System Concepts</em> (10th ed.). John Wiley & Sons.</li>
+  <li>Love, R. (2010). <em>Linux Kernel Development</em> (3rd ed.). Addison-Wesley Professional.</li>
+  <li>Kerrisk, M. (2010). <em>The Linux Programming Interface: A Linux and UNIX System Programming Handbook</em>. No Starch Press.</li>
+  <li>Linux Programmer's Manual: <code>strace(1)</code>, <code>ptrace(2)</code>, <code>proc(5)</code>, <code>syscalls(2)</code>, <code>signal(7)</code>.</li>
+  <li>Yama Linux Security Module Documentation: <code>Documentation/admin-guide/LSM/Yama.rst</code>.</li>
+</ol>
+
+<div style="margin-top: 50px; text-align: center; border-top: 1px solid #cbd5e1; padding-top: 15px; font-size: 8.5pt; color: #94a3b8;">
+  End of Documentation — OScope Linux System Call Monitoring & Inspection Suite | SEM-5 OS Mini-Project
+</div>
+
+</body>
+</html>
