@@ -838,6 +838,7 @@ class SyscallMonitorApp:
             self.proc_table.delete(item)
 
         for p in filtered:
+            display_name = f"{p['name']} [OScope Self]" if p["pid"] == os.getpid() else p["name"]
             self.proc_table.insert(
                 "",
                 "end",
@@ -845,7 +846,7 @@ class SyscallMonitorApp:
                 values=(
                     p["pid"],
                     p["ppid"],
-                    p["name"],
+                    display_name,
                     p["user"],
                     p["state"],
                     f"{p['cpu_percent']:.1f}%",
@@ -876,10 +877,16 @@ class SyscallMonitorApp:
             return
         pid = int(selected[0])
         self._selected_proc_pid = pid
-        self.btn_attach_pid.config(
-            state="normal" if not self.is_monitoring else "disabled",
-            text=f"🔍 Attach & Trace Syscalls (PID: {pid})"
-        )
+        if pid == os.getpid():
+            self.btn_attach_pid.config(
+                state="disabled",
+                text="⚠️ Cannot Trace Self (OScope)"
+            )
+        else:
+            self.btn_attach_pid.config(
+                state="normal" if not self.is_monitoring else "disabled",
+                text=f"🔍 Attach & Trace Syscalls (PID: {pid})"
+            )
         self._refresh_proc_inspector(pid)
 
     def _refresh_proc_inspector(self, pid: int):
@@ -900,11 +907,20 @@ class SyscallMonitorApp:
             self.btn_attach_pid.config(state="disabled", text="🔍 Attach & Trace Syscalls")
             return
 
-        self.lbl_proc_inspect_summary.config(
-            text=f"Selected: PID {details['pid']} ({details['name']}) | User: {details['user']} | Parent PPID: {details['ppid']}",
-            foreground="#0066cc"
-        )
-        self.lbl_proc_inspect_state.config(text=f"State: {details['state_desc']}")
+        if pid == os.getpid():
+            self.lbl_proc_inspect_summary.config(
+                text=f"Selected: PID {details['pid']} ({details['name']}) [OScope Application — Self Process]",
+                foreground="#d35400"
+            )
+            self.lbl_proc_inspect_state.config(
+                text=f"State: {details['state_desc']}  ⚠️ Self-tracing is prohibited to prevent circular ptrace deadlocks."
+            )
+        else:
+            self.lbl_proc_inspect_summary.config(
+                text=f"Selected: PID {details['pid']} ({details['name']}) | User: {details['user']} | Parent PPID: {details['ppid']}",
+                foreground="#0066cc"
+            )
+            self.lbl_proc_inspect_state.config(text=f"State: {details['state_desc']}")
 
         rss_mb = details["vm_rss_kb"] / 1024.0
         vmsize_mb = details["vm_size_kb"] / 1024.0
@@ -939,6 +955,18 @@ class SyscallMonitorApp:
             messagebox.showinfo("Select Process", "Please select a process from the table to trace.")
             return
 
+        pid = self._selected_proc_pid
+        if pid == os.getpid():
+            messagebox.showwarning(
+                "Self-Tracing Prohibited (Kernel Deadlock)",
+                f"PID {pid} is the OScope application itself!\n\n"
+                "In Linux, a program cannot attach strace/ptrace to its own PID.\n"
+                "Attempting to trace oneself causes an immediate circular deadlock:\n"
+                "the kernel halts the process for each syscall, freezing the GUI event loop.\n\n"
+                "Please select an external process to trace (e.g. bash, a python script, or background command)."
+            )
+            return
+
         if self.is_monitoring:
             messagebox.showwarning(
                 "Monitoring Active",
@@ -946,7 +974,6 @@ class SyscallMonitorApp:
             )
             return
 
-        pid = self._selected_proc_pid
         target_str = f"PID: {pid}"
         self.cmd_entry.delete(0, tk.END)
         self.cmd_entry.insert(0, target_str)
@@ -2032,6 +2059,17 @@ class SyscallMonitorApp:
             target_pid_num = int(cmd)
 
         if target_pid_num is not None:
+            if target_pid_num == os.getpid():
+                messagebox.showerror(
+                    "Self-Tracing Prohibited (Kernel Deadlock)",
+                    f"Process ID {target_pid_num} is the OScope application itself!\n\n"
+                    "In Linux, a process cannot trace itself under ptrace. Intercepting its own "
+                    "system calls halts execution and freezes the GUI event loop, causing a "
+                    "circular kernel deadlock.\n\n"
+                    "Please select an external process to trace."
+                )
+                return
+
             if not os.path.exists(f"/proc/{target_pid_num}"):
                 messagebox.showerror(
                     "Process Not Found",
